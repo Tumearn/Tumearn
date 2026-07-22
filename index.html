@@ -1,1 +1,209 @@
+<div id="app-container" style="background:#f8fafc; font-family:system-ui,sans-serif; min-height:100vh; padding:20px; box-sizing:border-box;">
+    
+    <!-- Header -->
+    <div style="background:white; padding:15px 20px; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.1); display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; max-width:500px; margin-left:auto; margin-right:auto;">
+        <h1 style="margin:0; font-size:18px; color:#2563eb;">TumEarn</h1>
+        <div>
+            <span id="nav-user-email" style="font-size:13px; color:#475569; margin-right:10px; display:none;"></span>
+            <button onclick="logoutUser()" id="logout-btn" style="display:none; font-size:12px; background:#e2e8f0; color:#334155; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">Logout</button>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div style="max-width:500px; margin:0 auto;">
+        
+        <!-- Login Card -->
+        <div id="login-card" style="background:white; padding:30px; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center;">
+            <h2 style="margin-top:0; color:#1e293b; font-size:22px;">Play &amp; Earn Platform</h2>
+            <p style="color:#64748b; font-size:14px; margin-bottom:20px;">Log in with Google to play games, watch sponsor ads, and earn cash rewards.</p>
+            <button onclick="handleGoogleLogin()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; font-size:15px; cursor:pointer;">
+                Login with Google
+            </button>
+        </div>
+
+        <!-- Dashboard & Game Card -->
+        <div id="dashboard-card" style="display:none; background:white; padding:20px; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+            <div style="background:#eff6ff; padding:15px; border-radius:10px; border:1px solid #bfdbfe; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <div>
+                    <p style="margin:0; font-size:11px; color:#2563eb; font-weight:bold; text-transform:uppercase;">Your Balance</p>
+                    <h3 style="margin:0; font-size:24px; color:#1e3a8a;">$<span id="display-balance">0.00</span></h3>
+                </div>
+                <span style="background:#d1fae5; color:#065f46; font-size:11px; font-weight:bold; padding:4px 10px; border-radius:20px;">Gamer Earner</span>
+            </div>
+
+            <!-- Game Arena -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:15px; border-radius:12px; text-align:center;">
+                <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">Reaction Clicker Game</h3>
+                <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Hit the target as fast as you can to view a sponsor ad and earn $0.01!</p>
+
+                <div id="game-screen" style="height:150px; background:white; border:2px dashed #cbd5e1; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; margin-bottom:15px;">
+                    <p id="game-instructions" style="margin:0; font-size:14px; color:#475569; font-weight:500;">Click Start Game to begin!</p>
+                    <button id="target-btn" onclick="hitTarget()" style="display:none; background:#ef4444; color:white; border:none; font-weight:bold; padding:10px 20px; border-radius:50px; cursor:pointer; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                        CLICK ME!
+                    </button>
+                </div>
+
+                <button id="start-game-btn" onclick="startGameSession()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">
+                    Start Game Round
+                </button>
+
+                <p id="game-status" style="margin:10px 0 0 0; font-size:12px; color:#64748b; display:none;"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align:center; padding-top:20px; font-size:12px; color:#94a3b8;">
+        &#169; 2026 TumEarn Platform. All rights reserved.
+    </div>
+</div>
+
+<!-- Firebase SDK (Compat Version for Stable Web Execution) -->
+<script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDrx7lN3KzdFx-Wnf1Q5ycl6mDL_TNYG7w",
+        authDomain: "tumearn-fd2e6.firebaseapp.com",
+        projectId: "tumearn-fd2e6",
+        storageBucket: "tumearn-fd2e6.firebasestorage.app",
+        messagingSenderId: "281816404741",
+        appId: "1:281816404741:web:c961604b42c9252ea49d6c",
+        measurementId: "G-G1T4R4SLN6"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let activeUser = null;
+    let gameActive = false;
+    const ADSTERRA_DIRECT_LINK = "YOUR_ADSTERRA_DIRECT_LINK_URL";
+
+    // Track Authentication state changes safely
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            activeUser = user;
+            document.getElementById('login-card').style.display = 'none';
+            document.getElementById('dashboard-card').style.display = 'block';
+            document.getElementById('nav-user-email').innerText = user.email;
+            document.getElementById('nav-user-email').style.display = 'inline';
+            document.getElementById('logout-btn').style.display = 'inline-block';
+
+            try {
+                const userDoc = await db.collection("users").doc(user.uid).get();
+                if (userDoc.exists) {
+                    document.getElementById('display-balance').innerText = userDoc.data().balance.toFixed(2);
+                }
+            } catch (e) {
+                console.error("Error reading balance:", e);
+            }
+        } else {
+            activeUser = null;
+            document.getElementById('login-card').style.display = 'block';
+            document.getElementById('dashboard-card').style.display = 'none';
+            document.getElementById('nav-user-email').style.display = 'none';
+            document.getElementById('logout-btn').style.display = 'none';
+        }
+    });
+
+    // Google Login using Redirect method to avoid mobile popup blocks
+    function handleGoogleLogin() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithRedirect(provider).catch((error) => {
+            console.error("Login error:", error);
+            alert("Login failed: " + error.message);
+        });
+    }
+
+    // Check if returning from redirect sign-in
+    auth.getRedirectResult().then(async (result) => {
+        if (result && result.user) {
+            const user = result.user;
+            const userRef = db.collection("users").doc(user.uid);
+            const docSnap = await userRef.get();
+            if (!docSnap.exists) {
+                await userRef.set({ email: user.email, balance: 0.00, createdAt: new Date() });
+            }
+        }
+    }).catch((err) => {
+        console.error("Redirect result error:", err);
+    });
+
+    function logoutUser() {
+        auth.signOut();
+    }
+
+    function startGameSession() {
+        const startBtn = document.getElementById('start-game-btn');
+        const instructions = document.getElementById('game-instructions');
+        const targetBtn = document.getElementById('target-btn');
+        const statusText = document.getElementById('game-status');
+
+        startBtn.disabled = true;
+        startBtn.style.opacity = '0.5';
+        instructions.innerText = "Get ready...";
+        statusText.style.display = 'none';
+
+        let randomDelay = Math.floor(Math.random() * 2000) + 1000;
+
+        setTimeout(() => {
+            instructions.innerText = "Catch it!";
+            targetBtn.style.display = 'inline-block';
+            gameActive = true;
+        }, randomDelay);
+    }
+
+    function hitTarget() {
+        if (!gameActive) return;
+        gameActive = false;
+
+        const targetBtn = document.getElementById('target-btn');
+        const instructions = document.getElementById('game-instructions');
+        const statusText = document.getElementById('game-status');
+        const startBtn = document.getElementById('start-game-btn');
+
+        targetBtn.style.display = 'none';
+        instructions.innerText = "Round Finished! Opening sponsor ad...";
+        statusText.style.display = 'block';
+        statusText.innerText = "Loading ad experience...";
+
+        window.open(ADSTERRA_DIRECT_LINK, '_blank');
+
+        let countdown = 5;
+        let rewardTimer = setInterval(async () => {
+            countdown--;
+            if (countdown > 0) {
+                statusText.innerText = `Please view sponsor page... ${countdown}s remaining`;
+            } else {
+                clearInterval(rewardTimer);
+                statusText.innerText = "Reward earned! Updating balance...";
+
+                try {
+                    const userRef = db.collection("users").doc(activeUser.uid);
+                    await userRef.update({
+                        balance: firebase.firestore.FieldValue.increment(0.01)
+                    });
+
+                    const updatedSnap = await userRef.get();
+                    document.getElementById('display-balance').innerText = updatedSnap.data().balance.toFixed(2);
+                    
+                    statusText.innerText = "Success! +$0.01 added to your wallet.";
+                    statusText.style.color = "#059669";
+                    startBtn.disabled = false;
+                    startBtn.style.opacity = '1';
+                    startBtn.innerText = "Play Another Round";
+                    instructions.innerText = "Click 'Play Another Round' to earn more!";
+                } catch (err) {
+                    console.error("Credit error:", err);
+                    statusText.innerText = "Error crediting balance.";
+                    startBtn.disabled = false;
+                    startBtn.style.opacity = '1';
+                }
+            }
+        }, 1000);
+    }
+</script>
 
