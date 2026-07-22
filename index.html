@@ -80,7 +80,7 @@
 
     let activeUser = null;
     let gameActive = false;
-    const ADSTERRA_DIRECT_LINK = "YOUR_ADSTERRA_DIRECT_LINK_URL";
+    const ADSTERRA_DIRECT_LINK = "https://www.effectivecpmnetwork.com/d2cwtcwg?key=315a2a65f103daae0647c8555ad0a203";
 
     auth.onAuthStateChanged(async (user) => {
         if (user) {
@@ -112,7 +112,6 @@
         }
     });
 
-    // Google Login using Popup method to prevent loop blocks
     async function handleGoogleLogin() {
         const provider = new firebase.auth.GoogleAuthProvider();
         try {
