@@ -22,7 +22,7 @@
         <!-- Login Card -->
         <div id="login-card" style="background:white; padding:30px; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; margin-top:40px;">
             <h2 style="margin-top:0; color:#1e293b; font-size:22px;">Welcome to TumEarn</h2>
-            <p style="color:#64748b; font-size:14px; margin-bottom:20px;">Play games, claim progressive daily bonuses, refer friends, and request payouts safely.</p>
+            <p style="color:#64748b; font-size:14px; margin-bottom:20px;">Play games, claim progressive daily streak bonuses, and cash out securely.</p>
             <button onclick="handleGoogleLogin()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; font-size:15px; cursor:pointer;">
                 Login with Google
             </button>
@@ -40,28 +40,64 @@
                 </div>
             </div>
 
+            <!-- Daily Streak Tracker Box -->
+            <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px;">
+                <h4 style="margin:0 0 8px 0; font-size:14px; color:#1e293b;">Daily Login Rewards (7-Day Streak)</h4>
+                <p style="margin:0 0 10px 0; font-size:12px; color:#64748b;">Log in daily to climb your streak. Resets after Day 7!</p>
+                <div style="display:flex; gap:6px; justify-content:space-between;" id="streak-grid">
+                    <!-- Dynamic streak items inserted here -->
+                </div>
+            </div>
+
             <!-- Tabs Navigation inside Dashboard -->
             <div style="display:flex; background:#e2e8f0; padding:4px; border-radius:10px; margin-bottom:15px;">
-                <button onclick="switchSubTab('game')" id="subtab-game-btn" style="flex:1; background:white; border:none; padding:8px; border-radius:8px; font-weight:bold; font-size:13px; cursor:pointer; color:#1e293b;">Play & Earn</button>
+                <button onclick="switchSubTab('game')" id="subtab-game-btn" style="flex:1; background:white; border:none; padding:8px; border-radius:8px; font-weight:bold; font-size:13px; cursor:pointer; color:#1e293b;">Games & Earn</button>
                 <button onclick="switchSubTab('referral')" id="subtab-ref-btn" style="flex:1; background:transparent; border:none; padding:8px; border-radius:8px; font-weight:bold; font-size:13px; cursor:pointer; color:#64748b;">Referrals</button>
             </div>
 
-            <!-- Game Subtab Content -->
-            <div id="subtab-game" style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; text-align:center;">
-                <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">Reaction Clicker Game</h3>
-                <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Hit the target fast to view a sponsor ad and earn $0.001!</p>
+            <!-- Game Subtab Content (Multiple Mini-Games) -->
+            <div id="subtab-game" style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px;">
+                <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b; text-align:center;">Select Mini-Game</h3>
+                <p style="margin:0 0 15px 0; font-size:12px; color:#64748b; text-align:center;">Play games, view ads, and earn $0.001 per win!</p>
 
-                <div id="game-screen" style="height:140px; background:#f8fafc; border:2px dashed #cbd5e1; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; margin-bottom:15px;">
-                    <p id="game-instructions" style="margin:0; font-size:14px; color:#475569; font-weight:500;">Click Start Game to begin!</p>
-                    <button id="target-btn" onclick="hitTarget()" style="display:none; background:#ef4444; color:white; border:none; font-weight:bold; padding:10px 20px; border-radius:50px; cursor:pointer;">
-                        CLICK ME!
-                    </button>
+                <!-- Mini-Game Selection Buttons -->
+                <div style="display:flex; gap:5px; margin-bottom:15px;">
+                    <button onclick="switchMiniGame('reaction')" id="minigame-btn-reaction" style="flex:1; background:#2563eb; color:white; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Reaction</button>
+                    <button onclick="switchMiniGame('guess')" id="minigame-btn-guess" style="flex:1; background:#f1f5f9; color:#475569; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Number Guess</button>
+                    <button onclick="switchMiniGame('spin')" id="minigame-btn-spin" style="flex:1; background:#f1f5f9; color:#475569; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Lucky Spin</button>
                 </div>
 
-                <button id="start-game-btn" onclick="startGameSession()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">
-                    Start Game Round
-                </button>
-                <p id="game-status" style="margin:10px 0 0 0; font-size:12px; color:#64748b; display:none;"></p>
+                <!-- 1. Reaction Clicker Game Container -->
+                <div id="game-reaction-pane">
+                    <div id="game-screen" style="height:130px; background:#f8fafc; border:2px dashed #cbd5e1; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; margin-bottom:15px;">
+                        <p id="game-instructions" style="margin:0; font-size:13px; color:#475569; font-weight:500;">Click Start Game to begin!</p>
+                        <button id="target-btn" onclick="hitReaction()" style="display:none; background:#ef4444; color:white; border:none; font-weight:bold; padding:10px 20px; border-radius:50px; cursor:pointer;">
+                            CLICK ME!
+                        </button>
+                    </div>
+                    <button id="start-game-btn" onclick="startReactionGame()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:13px;">Start Reaction Round</button>
+                    <p id="game-status" style="margin:10px 0 0 0; font-size:12px; color:#64748b; display:none; text-align:center;"></p>
+                </div>
+
+                <!-- 2. Number Guessing Game Container -->
+                <div id="game-guess-pane" style="display:none; text-align:center;">
+                    <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:10px; margin-bottom:15px;">
+                        <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong>:</p>
+                        <input type="number" id="guess-input" min="1" max="5" placeholder="Enter number (1-5)" style="width:140px; padding:8px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; text-align:center; margin-bottom:10px;"><br>
+                        <button onclick="submitGuess()" style="background:#10b981; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:12px;">Submit Guess</button>
+                    </div>
+                    <p id="guess-status" style="margin:0; font-size:12px; color:#64748b;"></p>
+                </div>
+
+                <!-- 3. Lucky Spin Game Container -->
+                <div id="game-spin-pane" style="display:none; text-align:center;">
+                    <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:20px; border-radius:10px; margin-bottom:15px;">
+                        <div id="spin-wheel-box" style="font-size:24px; font-weight:bold; color:#2563eb; margin-bottom:10px;">🎁 ? 🎁</div>
+                        <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Spin the box to trigger a sponsor ad and win $0.001!</p>
+                        <button id="spin-btn" onclick="startSpinGame()" style="background:#8b5cf6; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Spin Now</button>
+                    </div>
+                    <p id="spin-status" style="margin:0; font-size:12px; color:#64748b;"></p>
+                </div>
             </div>
 
             <!-- Referral Subtab Content -->
@@ -87,14 +123,15 @@
             </div>
 
             <div style="margin-bottom:20px;">
-                <label style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:5px;">Select Payout Method</label>
+                <label style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:5px;">Select Preferred Payout Method</label>
                 <select id="prof-method" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; background:white; font-size:13px; box-sizing:border-box;">
-                    <option value="WebMoney">WebMoney (Min. $5.00)</option>
-                    <option value="Paxum">Paxum (Min. $5.00)</option>
-                    <option value="LocalBank">Local Bank Transfer (Min. $25.00)</option>
-                    <option value="PayPal">PayPal / Hyperwallet (Min. $25.00)</option>
-                    <option value="Crypto">Cryptocurrency / Bitcoin (Min. $100.00)</option>
-                    <option value="Wire">Wire Transfer (Min. $1,000.00)</option>
+                    <option value="WebMoney WMT">WebMoney WMT (Min. $5.00 | 2% Method Fee | 1-2 Days)</option>
+                    <option value="WebMoney WMZ">WebMoney WMZ (Min. $5.00 | 1% Method Fee | 1-2 Days)</option>
+                    <option value="Paxum">Paxum (Min. $5.00 | $1.00 Fee | 1-2 Days)</option>
+                    <option value="LocalBank">Local Bank Transfer (Min. $25.00 | $7.00 + Exch. Rate | Up to 5 Days)</option>
+                    <option value="PayPal">PayPal / Hyperwallet (Min. $25.00 | Standard Fee)</option>
+                    <option value="Crypto">Cryptocurrency / USDT (Min. $100.00 | Network Fee)</option>
+                    <option value="Wire">Wire Transfer (Min. $1,000.00 | Bank Fee)</option>
                 </select>
             </div>
 
@@ -123,17 +160,31 @@
     </div>
 </div>
 
-<!-- Withdrawal Modal Popup -->
+<!-- Withdrawal Modal Popup (Exclusive 5% Withdrawal Section Fee Calculation) -->
 <div id="withdraw-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:9998;">
-    <div style="background:white; padding:24px; border-radius:16px; max-width:380px; width:100%; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.15);">
-        <h3 style="margin-top:0; color:#1e293b; font-size:18px;">Request Payout</h3>
-        <p style="font-size:13px; color:#64748b; margin-bottom:10px;">Select your saved method threshold (WebMoney/Paxum: $5, Local Bank: $25, Crypto: $100).</p>
-        <p style="font-size:12px; color:#2563eb; font-weight:bold; margin-bottom:15px;">It will take 1-3 business days to get the money.</p>
-        <div style="margin-bottom:20px;">
-            <input type="number" id="withdraw-amount" placeholder="Enter amount to withdraw ($)" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; box-sizing:border-box; font-size:14px; text-align:center;">
+    <div style="background:white; padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:left; box-shadow:0 10px 25px rgba(0,0,0,0.15);">
+        <h3 style="margin-top:0; color:#1e293b; font-size:18px; text-align:center;">Request Payout</h3>
+        
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:10px; border-radius:8px; font-size:11px; color:#475569; margin-bottom:12px; line-height:1.4;">
+            <strong>Withdrawal Section Terms & Fee:</strong><br>
+            • <strong>Website Withdrawal Fee:</strong> 5% is strictly deducted here upon payout request.<br>
+            • Minimum withdrawal amount is $5.00.<br>
+            • Processing window: 1–3 business days.
         </div>
+
+        <div style="margin-bottom:12px;">
+            <input type="number" id="withdraw-amount" oninput="calculateWithdrawFee()" placeholder="Enter amount to withdraw ($)" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; box-sizing:border-box; font-size:14px; text-align:center;">
+        </div>
+
+        <!-- Live Breakdown View inside Withdrawal Section -->
+        <div style="background:#f1f5f9; padding:10px; border-radius:8px; font-size:12px; color:#334155; margin-bottom:15px; line-height:1.5;">
+            <div>Requested Amount: <strong>$<span id="calc-requested">0.00</span></strong></div>
+            <div>Website Fee (5%): <strong style="color:#dc2626;">-$<span id="calc-fee">0.00</span></strong></div>
+            <div style="border-top:1px solid #cbd5e1; margin-top:4px; padding-top:4px;">You Will Receive: <strong style="color:#059669;">$<span id="calc-net">0.00</span></strong></div>
+        </div>
+
         <div style="display:flex; gap:10px;">
-            <button onclick="submitWithdrawal()" style="flex:1; background:#10b981; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:14px;">Submit</button>
+            <button onclick="submitWithdrawal()" style="flex:1; background:#10b981; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:14px;">Confirm Payout</button>
             <button onclick="closeWithdrawModal()" style="flex:1; background:#e2e8f0; color:#334155; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:14px;">Cancel</button>
         </div>
     </div>
@@ -163,6 +214,38 @@
     let gameActive = false;
     const ADSTERRA_DIRECT_LINK = "https://www.effectivecpmnetwork.com/d2cwtcwg?key=315a2a65f103daae0647c8555ad0a203";
 
+    const bonusAmounts = { 1: 0.01, 2: 0.02, 3: 0.03, 4: 0.04, 5: 0.05, 6: 0.06, 7: 0.07 };
+
+    function renderStreakUI(currentStreak, claimedToday) {
+        const grid = document.getElementById('streak-grid');
+        grid.innerHTML = '';
+        for (let i = 1; i <= 7; i++) {
+            let isPassed = i < currentStreak || (i === currentStreak && claimedToday);
+            let isCurrent = i === currentStreak && !claimedToday;
+            
+            let bg = '#f1f5f9';
+            let color = '#64748b';
+            let border = '1px solid #e2e8f0';
+
+            if (isPassed) {
+                bg = '#d1fae5';
+                color = '#065f46';
+                border = '1px solid #10b981';
+            } else if (isCurrent) {
+                bg = '#eff6ff';
+                color = '#2563eb';
+                border = '2px solid #2563eb';
+            }
+
+            grid.innerHTML += `
+                <div style="flex:1; background:${bg}; border:${border}; border-radius:8px; padding:6px 2px; text-align:center;">
+                    <div style="font-size:10px; font-weight:bold; color:${color};">Day ${i}</div>
+                    <div style="font-size:11px; font-weight:bold; color:${color}; margin-top:2px;">+$${bonusAmounts[i].toFixed(2)}</div>
+                </div>
+            `;
+        }
+    }
+
     function showToast(title, message) {
         document.getElementById('toast-title').innerText = title;
         document.getElementById('toast-message').innerText = message;
@@ -187,6 +270,8 @@
             try {
                 const userRef = db.collection("users").doc(user.uid);
                 const userDoc = await userRef.get();
+                const todayStr = new Date().toDateString();
+
                 if (!userDoc.exists) {
                     let initialData = {
                         email: user.email,
@@ -194,7 +279,7 @@
                         referrals: 0,
                         lastClaimDate: "",
                         streakDay: 0,
-                        payoutMethod: "WebMoney",
+                        payoutMethod: "WebMoney WMT",
                         payoutDetails: "",
                         createdAt: new Date()
                     };
@@ -211,11 +296,19 @@
 
                 const docSnap = await userRef.get();
                 const data = docSnap.data();
+                
                 document.getElementById('display-balance').innerText = data.balance.toFixed(3);
                 document.getElementById('ref-count').innerText = data.referrals || 0;
                 document.getElementById('prof-email').value = user.email;
-                document.getElementById('prof-method').value = data.payoutMethod || "WebMoney";
+                document.getElementById('prof-method').value = data.payoutMethod || "WebMoney WMT";
                 document.getElementById('prof-details').value = data.payoutDetails || "";
+
+                let claimedToday = (data.lastClaimDate === todayStr);
+                let currentStreak = data.streakDay || 1;
+                if (currentStreak < 1) currentStreak = 1;
+                if (currentStreak > 7) currentStreak = 7;
+
+                renderStreakUI(currentStreak, claimedToday);
 
                 let refLink = window.location.origin + window.location.pathname + "?ref=" + user.uid;
                 document.getElementById('ref-link-box').innerText = refLink;
@@ -282,7 +375,23 @@
         }
     }
 
-    function startGameSession() {
+    function switchMiniGame(gameKey) {
+        document.getElementById('game-reaction-pane').style.display = gameKey === 'reaction' ? 'block' : 'none';
+        document.getElementById('game-guess-pane').style.display = gameKey === 'guess' ? 'block' : 'none';
+        document.getElementById('game-spin-pane').style.display = gameKey === 'spin' ? 'block' : 'none';
+
+        document.getElementById('minigame-btn-reaction').style.background = gameKey === 'reaction' ? '#2563eb' : '#f1f5f9';
+        document.getElementById('minigame-btn-reaction').style.color = gameKey === 'reaction' ? 'white' : '#475569';
+
+        document.getElementById('minigame-btn-guess').style.background = gameKey === 'guess' ? '#2563eb' : '#f1f5f9';
+        document.getElementById('minigame-btn-guess').style.color = gameKey === 'guess' ? 'white' : '#475569';
+
+        document.getElementById('minigame-btn-spin').style.background = gameKey === 'spin' ? '#2563eb' : '#f1f5f9';
+        document.getElementById('minigame-btn-spin').style.color = gameKey === 'spin' ? 'white' : '#475569';
+    }
+
+    // 1. Reaction Game Logic
+    function startReactionGame() {
         const startBtn = document.getElementById('start-game-btn');
         const instructions = document.getElementById('game-instructions');
         const targetBtn = document.getElementById('target-btn');
@@ -301,7 +410,7 @@
         }, randomDelay);
     }
 
-    function hitTarget() {
+    function hitReaction() {
         if (!gameActive) return;
         gameActive = false;
 
@@ -317,11 +426,58 @@
 
         window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
 
+        runRewardCountdown(statusText, startBtn, instructions, "Play Another Round", "Click to earn more!");
+    }
+
+    // 2. Number Guessing Game Logic
+    function submitGuess() {
+        const val = parseInt(document.getElementById('guess-input').value);
+        const guessStatus = document.getElementById('guess-status');
+
+        if (isNaN(val) || val < 1 || val > 5) {
+            guessStatus.innerText = "Please enter a valid number between 1 and 5.";
+            guessStatus.style.color = "#dc2626";
+            return;
+        }
+
+        let secret = Math.floor(Math.random() * 5) + 1;
+        if (val === secret) {
+            guessStatus.innerText = `Correct! Secret was ${secret}. Opening sponsor ad...`;
+            guessStatus.style.color = "#059669";
+            window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
+            runRewardCountdown(guessStatus, null, null, null, "Guessed right! Reward added.");
+        } else {
+            guessStatus.innerText = `Wrong! Secret was ${secret}. Try again!`;
+            guessStatus.style.color = "#dc2626";
+        }
+    }
+
+    // 3. Lucky Spin Game Logic
+    function startSpinGame() {
+        const spinBtn = document.getElementById('spin-btn');
+        const spinStatus = document.getElementById('spin-status');
+        const wheelBox = document.getElementById('spin-wheel-box');
+
+        spinBtn.disabled = true;
+        spinBtn.style.opacity = '0.5';
+        spinStatus.innerText = "Spinning wheel...";
+        wheelBox.innerText = "🌀 ... 🌀";
+
+        setTimeout(() => {
+            wheelBox.innerText = "🎉 WINNER! 🎉";
+            spinStatus.innerText = "Opening sponsor ad for reward...";
+            window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
+            runRewardCountdown(spinStatus, spinBtn, null, "Spin Again", "Spin completed!");
+        }, 1500);
+    }
+
+    // Universal reward execution helper after opening ad
+    function runRewardCountdown(statusElement, buttonElement, instructionElement, btnText, instText) {
         let countdown = 5;
         let rewardTimer = setInterval(async () => {
             countdown--;
             if (countdown > 0) {
-                statusText.innerText = `Please view sponsor page... ${countdown}s remaining`;
+                statusElement.innerText = `Please view sponsor page... ${countdown}s remaining`;
             } else {
                 clearInterval(rewardTimer);
                 try {
@@ -332,16 +488,22 @@
                     const updatedSnap = await userRef.get();
                     document.getElementById('display-balance').innerText = updatedSnap.data().balance.toFixed(3);
                     
-                    statusText.innerText = "Success! +$0.001 added to wallet.";
-                    statusText.style.color = "#059669";
-                    startBtn.disabled = false;
-                    startBtn.style.opacity = '1';
-                    startBtn.innerText = "Play Another Round";
-                    instructions.innerText = "Click to earn more!";
+                    statusElement.innerText = "Success! +$0.001 added to wallet.";
+                    statusElement.style.color = "#059669";
+                    if (buttonElement) {
+                        buttonElement.disabled = false;
+                        buttonElement.style.opacity = '1';
+                        if (btnText) buttonElement.innerText = btnText;
+                    }
+                    if (instructionElement && instText) {
+                        instructionElement.innerText = instText;
+                    }
                 } catch (err) {
-                    statusText.innerText = "Error crediting balance.";
-                    startBtn.disabled = false;
-                    startBtn.style.opacity = '1';
+                    statusElement.innerText = "Error crediting balance.";
+                    if (buttonElement) {
+                        buttonElement.disabled = false;
+                        buttonElement.style.opacity = '1';
+                    }
                 }
             }
         }, 1000);
@@ -358,13 +520,11 @@
             return;
         }
 
-        // Calculate streak (Day 1 to 7, reset after 7)
         let currentStreak = (data.streakDay || 0) + 1;
         if (currentStreak > 7) {
             currentStreak = 1;
         }
 
-        const bonusAmounts = { 1: 0.01, 2: 0.02, 3: 0.03, 4: 0.04, 5: 0.05, 6: 0.06, 7: 0.07 };
         let rewardAmount = bonusAmounts[currentStreak];
 
         await userRef.update({
@@ -373,9 +533,11 @@
             streakDay: currentStreak
         });
 
+        renderStreakUI(currentStreak, true);
+
         const updatedSnap = await userRef.get();
         document.getElementById('display-balance').innerText = updatedSnap.data().balance.toFixed(3);
-        showToast(`Day ${currentStreak} Claimed!`, `Success! +$${rewardAmount.toFixed(2)} daily bonus added to your wallet (Streak Day ${currentStreak}/7).`);
+        showToast(`Day ${currentStreak} Claimed!`, `Success! +$${rewardAmount.toFixed(2)} added to your wallet (Streak Day ${currentStreak}/7).`);
     }
 
     function copyRefLink() {
@@ -405,11 +567,24 @@
     }
 
     function openWithdrawModal() {
+        document.getElementById('withdraw-amount').value = '';
+        document.getElementById('calc-requested').innerText = '0.00';
+        document.getElementById('calc-fee').innerText = '0.00';
+        document.getElementById('calc-net').innerText = '0.00';
         document.getElementById('withdraw-modal').style.display = 'flex';
     }
 
     function closeWithdrawModal() {
         document.getElementById('withdraw-modal').style.display = 'none';
+    }
+
+    function calculateWithdrawFee() {
+        const amount = parseFloat(document.getElementById('withdraw-amount').value) || 0;
+        let fee = amount * 0.05;
+        let net = amount - fee;
+        document.getElementById('calc-requested').innerText = amount.toFixed(2);
+        document.getElementById('calc-fee').innerText = fee.toFixed(2);
+        document.getElementById('calc-net').innerText = net > 0 ? net.toFixed(2) : '0.00';
     }
 
     async function submitWithdrawal() {
@@ -429,24 +604,30 @@
             return;
         }
 
+        let platformFee = amount * 0.05;
+        let netPayout = amount - platformFee;
+        let totalDeduction = amount; // Full requested amount deducted from user balance
+
         try {
             await db.collection("withdrawals").add({
                 userId: activeUser.uid,
                 email: activeUser.email,
-                amount: amount,
+                requestedAmount: amount,
+                platformFee: platformFee,
+                netPayout: netPayout,
                 status: "Pending",
                 timestamp: new Date()
             });
 
             await db.collection("users").doc(activeUser.uid).update({
-                balance: firebase.firestore.FieldValue.increment(-amount)
+                balance: firebase.firestore.FieldValue.increment(-totalDeduction)
             });
 
             const updatedSnap = await db.collection("users").doc(activeUser.uid).get();
             document.getElementById('display-balance').innerText = updatedSnap.data().balance.toFixed(3);
 
             closeWithdrawModal();
-            showToast("Request Submitted", "Withdrawal request submitted successfully! It will take 1-3 business days to get the money.");
+            showToast("Request Submitted", `Withdrawal submitted successfully! 5% fee ($${platformFee.toFixed(2)}) applied. Net payout: $${netPayout.toFixed(2)}. Processing takes 1-3 business days.`);
         } catch (e) {
             showToast("Error", "Error submitting withdrawal request.");
         }
