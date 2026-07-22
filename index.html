@@ -1,44 +1,59 @@
-<div id="app-container" style="background:#f8fafc; font-family:system-ui,sans-serif; min-height:100vh; padding:20px; box-sizing:border-box;">
-    
-    <!-- Header -->
-    <div style="background:white; padding:15px 20px; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.1); display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; max-width:500px; margin-left:auto; margin-right:auto;">
-        <h1 style="margin:0; font-size:18px; color:#2563eb;">TumEarn</h1>
-        <div>
-            <span id="nav-user-email" style="font-size:13px; color:#475569; margin-right:10px; display:none;"></span>
-            <button onclick="logoutUser()" id="logout-btn" style="display:none; font-size:12px; background:#e2e8f0; color:#334155; border:none; padding:6px 12px; border-radius:6px; cursor:pointer;">Logout</button>
-        </div>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TumEarn - Play & Earn Platform</title>
+</head>
+<body style="margin:0; background:#f8fafc; font-family:system-ui,sans-serif;">
 
-    <!-- Main Content Area -->
-    <div style="max-width:500px; margin:0 auto;">
-        
+<div style="max-width:500px; margin:0 auto; min-height:100vh; padding:15px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:space-between;">
+    
+    <div>
+        <!-- Header -->
+        <div style="background:white; padding:15px 20px; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.1); display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h1 style="margin:0; font-size:18px; color:#2563eb;">TumEarn</h1>
+            <div>
+                <button onclick="switchTab('dashboard')" id="nav-dash" style="display:none; font-size:12px; background:#eff6ff; color:#2563eb; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; margin-right:5px;">Home</button>
+                <button onclick="switchTab('profile')" id="nav-prof" style="display:none; font-size:12px; background:#f1f5f9; color:#334155; border:none; padding:6px 10px; border-radius:6px; cursor:pointer;">Profile</button>
+            </div>
+        </div>
+
         <!-- Login Card -->
-        <div id="login-card" style="background:white; padding:30px; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center;">
-            <h2 style="margin-top:0; color:#1e293b; font-size:22px;">Play &amp; Earn Platform</h2>
-            <p style="color:#64748b; font-size:14px; margin-bottom:20px;">Log in with Google to play games, watch sponsor ads, and earn cash rewards.</p>
+        <div id="login-card" style="background:white; padding:30px; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center; margin-top:40px;">
+            <h2 style="margin-top:0; color:#1e293b; font-size:22px;">Welcome to TumEarn</h2>
+            <p style="color:#64748b; font-size:14px; margin-bottom:20px;">Play games, claim daily bonuses, refer friends, and request payouts safely.</p>
             <button onclick="handleGoogleLogin()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; font-size:15px; cursor:pointer;">
                 Login with Google
             </button>
         </div>
 
-        <!-- Dashboard & Game Card -->
-        <div id="dashboard-card" style="display:none; background:white; padding:20px; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-            <div style="background:#eff6ff; padding:15px; border-radius:10px; border:1px solid #bfdbfe; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <div>
-                    <p style="margin:0; font-size:11px; color:#2563eb; font-weight:bold; text-transform:uppercase;">Your Balance</p>
-                    <h3 style="margin:0; font-size:24px; color:#1e3a8a;">$<span id="display-balance">0.00</span></h3>
+        <!-- Main Dashboard View -->
+        <div id="dashboard-view" style="display:none;">
+            <!-- Balance Card -->
+            <div style="background:linear-gradient(135deg, #2563eb, #1d4ed8); color:white; padding:20px; border-radius:16px; box-shadow:0 4px 6px rgba(37,99,235,0.2); margin-bottom:15px;">
+                <p style="margin:0; font-size:12px; opacity:0.9; text-transform:uppercase; font-weight:bold;">Total Wallet Balance</p>
+                <h2 style="margin:5px 0 15px 0; font-size:32px;">$<span id="display-balance">0.00</span></h2>
+                <div style="display:flex; gap:10px;">
+                    <button onclick="openWithdrawModal()" style="flex:1; background:white; color:#2563eb; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Request Withdrawal</button>
+                    <button onclick="claimDailyBonus()" id="daily-bonus-btn" style="flex:1; background:#10b981; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Claim Daily $0.05</button>
                 </div>
-                <span style="background:#d1fae5; color:#065f46; font-size:11px; font-weight:bold; padding:4px 10px; border-radius:20px;">Gamer Earner</span>
             </div>
 
-            <!-- Game Arena -->
-            <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:15px; border-radius:12px; text-align:center;">
-                <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">Reaction Clicker Game</h3>
-                <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Hit the target as fast as you can to view a sponsor ad and earn $0.01!</p>
+            <!-- Tabs Navigation inside Dashboard -->
+            <div style="display:flex; background:#e2e8f0; padding:4px; border-radius:10px; margin-bottom:15px;">
+                <button onclick="switchSubTab('game')" id="subtab-game-btn" style="flex:1; background:white; border:none; padding:8px; border-radius:8px; font-weight:bold; font-size:13px; cursor:pointer; color:#1e293b;">Play & Earn</button>
+                <button onclick="switchSubTab('referral')" id="subtab-ref-btn" style="flex:1; background:transparent; border:none; padding:8px; border-radius:8px; font-weight:bold; font-size:13px; cursor:pointer; color:#64748b;">Referrals</button>
+            </div>
 
-                <div id="game-screen" style="height:150px; background:white; border:2px dashed #cbd5e1; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; margin-bottom:15px;">
+            <!-- Game Subtab Content -->
+            <div id="subtab-game" style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; text-align:center;">
+                <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">Reaction Clicker Game</h3>
+                <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Hit the target fast to view a sponsor ad and earn $0.01!</p>
+
+                <div id="game-screen" style="height:140px; background:#f8fafc; border:2px dashed #cbd5e1; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; margin-bottom:15px;">
                     <p id="game-instructions" style="margin:0; font-size:14px; color:#475569; font-weight:500;">Click Start Game to begin!</p>
-                    <button id="target-btn" onclick="hitTarget()" style="display:none; background:#ef4444; color:white; border:none; font-weight:bold; padding:10px 20px; border-radius:50px; cursor:pointer; box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                    <button id="target-btn" onclick="hitTarget()" style="display:none; background:#ef4444; color:white; border:none; font-weight:bold; padding:10px 20px; border-radius:50px; cursor:pointer;">
                         CLICK ME!
                     </button>
                 </div>
@@ -46,9 +61,47 @@
                 <button id="start-game-btn" onclick="startGameSession()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">
                     Start Game Round
                 </button>
-
                 <p id="game-status" style="margin:10px 0 0 0; font-size:12px; color:#64748b; display:none;"></p>
             </div>
+
+            <!-- Referral Subtab Content -->
+            <div id="subtab-referral" style="display:none; background:white; border:1px solid #e2e8f0; padding:20px; border-radius:16px;">
+                <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">Invite Friends & Earn</h3>
+                <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Share your unique referral link. Earn a $0.10 bonus when your friend joins!</p>
+                <div style="background:#f8fafc; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:12px; word-break:break-all; color:#334155; margin-bottom:10px;" id="ref-link-box">
+                    Generating link...
+                </div>
+                <button onclick="copyRefLink()" style="width:100%; background:#10b981; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Copy Referral Link</button>
+                <p style="margin:15px 0 0 0; font-size:12px; color:#475569;">Total Referred Users: <strong id="ref-count">0</strong></p>
+            </div>
+        </div>
+
+        <!-- Profile View -->
+        <div id="profile-view" style="display:none; background:white; padding:20px; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+            <h3 style="margin-top:0; color:#1e293b; font-size:18px;">Account Profile</h3>
+            <p style="font-size:13px; color:#64748b; margin-bottom:20px;">Manage your login credentials and payout preferences.</p>
+            
+            <div style="margin-bottom:15px;">
+                <label style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:5px;">Email Address</label>
+                <input type="text" id="prof-email" readonly style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; background:#f8fafc; font-size:13px; box-sizing:border-box;">
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:5px;">Select Payout Method</label>
+                <select id="prof-method" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; background:white; font-size:13px; box-sizing:border-box;">
+                    <option value="WebMoney">WebMoney (WMZ)</option>
+                    <option value="LocalBank">Local Bank Transfer (Bangladesh)</option>
+                    <option value="Crypto">Cryptocurrency (USDT/Bitcoin)</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:5px;">Account / Wallet Details (Number or Purse)</label>
+                <input type="text" id="prof-details" placeholder="Enter account details or purse ID" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; box-sizing:border-box;">
+            </div>
+
+            <button onclick="saveProfileSettings()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:10px;">Save Profile Settings</button>
+            <button onclick="logoutUser()" style="width:100%; background:#fee2e2; color:#dc2626; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Logout</button>
         </div>
     </div>
 
@@ -58,7 +111,22 @@
     </div>
 </div>
 
-<!-- Firebase SDK -->
+<!-- Withdrawal Modal Popup -->
+<div id="withdraw-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
+    <div style="background:white; padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:center;">
+        <h3 style="margin-top:0; color:#1e293b;">Request Payout</h3>
+        <p style="font-size:13px; color:#64748b;" id="withdraw-notice">Minimum payout is $5.00 for WebMoney / $25.00 for Bank Transfer.</p>
+        <div style="margin:15px 0;">
+            <input type="number" id="withdraw-amount" placeholder="Enter amount to withdraw ($)" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; box-sizing:border-box; font-size:14px; text-align:center;">
+        </div>
+        <div style="display:flex; gap:10px;">
+            <button onclick="submitWithdrawal()" style="flex:1; background:#10b981; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Submit Request</button>
+            <button onclick="closeWithdrawModal()" style="flex:1; background:#e2e8f0; color:#334155; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
@@ -82,54 +150,115 @@
     let gameActive = false;
     const ADSTERRA_DIRECT_LINK = "https://www.effectivecpmnetwork.com/d2cwtcwg?key=315a2a65f103daae0647c8555ad0a203";
 
+    // Handle Referral tracking from URL (?ref=USER_ID)
+    const urlParams = new URLSearchParams(window.location.search);
+    const referredBy = urlParams.get('ref');
+
     auth.onAuthStateChanged(async (user) => {
         if (user) {
             activeUser = user;
             document.getElementById('login-card').style.display = 'none';
-            document.getElementById('dashboard-card').style.display = 'block';
-            document.getElementById('nav-user-email').innerText = user.email;
-            document.getElementById('nav-user-email').style.display = 'inline';
-            document.getElementById('logout-btn').style.display = 'inline-block';
+            document.getElementById('dashboard-view').style.display = 'block';
+            document.getElementById('nav-dash').style.display = 'inline-block';
+            document.getElementById('nav-prof').style.display = 'inline-block';
 
             try {
                 const userRef = db.collection("users").doc(user.uid);
                 const userDoc = await userRef.get();
                 if (!userDoc.exists) {
-                    await userRef.set({ email: user.email, balance: 0.00, createdAt: new Date() });
-                    document.getElementById('display-balance').innerText = "0.00";
-                } else {
-                    document.getElementById('display-balance').innerText = userDoc.data().balance.toFixed(2);
+                    let initialData = {
+                        email: user.email,
+                        balance: 0.00,
+                        referrals: 0,
+                        lastClaimDate: "",
+                        payoutMethod: "WebMoney",
+                        payoutDetails: "",
+                        createdAt: new Date()
+                    };
+                    if (referredBy && referredBy !== user.uid) {
+                        initialData.balance = 0.10; // welcome bonus for using referral
+                        const referrerRef = db.collection("users").doc(referredBy);
+                        await referrerRef.update({
+                            balance: firebase.firestore.FieldValue.increment(0.10),
+                            referrals: firebase.firestore.FieldValue.increment(1)
+                        });
+                    }
+                    await userRef.set(initialData);
                 }
+
+                // Load User Data into UI
+                const docSnap = await userRef.get();
+                const data = docSnap.data();
+                document.getElementById('display-balance').innerText = data.balance.toFixed(2);
+                document.getElementById('ref-count').innerText = data.referrals || 0;
+                document.getElementById('prof-email').value = user.email;
+                document.getElementById('prof-method').value = data.payoutMethod || "WebMoney";
+                document.getElementById('prof-details').value = data.payoutDetails || "";
+
+                // Generate referral link
+                let refLink = window.location.origin + window.location.pathname + "?ref=" + user.uid;
+                document.getElementById('ref-link-box').innerText = refLink;
+
             } catch (e) {
-                console.error("Error reading balance:", e);
+                console.error("Firestore error:", e);
             }
         } else {
             activeUser = null;
             document.getElementById('login-card').style.display = 'block';
-            document.getElementById('dashboard-card').style.display = 'none';
-            document.getElementById('nav-user-email').style.display = 'none';
-            document.getElementById('logout-btn').style.display = 'none';
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('profile-view').style.display = 'none';
+            document.getElementById('nav-dash').style.display = 'none';
+            document.getElementById('nav-prof').style.display = 'none';
         }
     });
 
     async function handleGoogleLogin() {
         const provider = new firebase.auth.GoogleAuthProvider();
         try {
-            const result = await auth.signInWithPopup(provider);
-            const user = result.user;
-            const userRef = db.collection("users").doc(user.uid);
-            const docSnap = await userRef.get();
-            if (!docSnap.exists) {
-                await userRef.set({ email: user.email, balance: 0.00, createdAt: new Date() });
-            }
+            await auth.signInWithPopup(provider);
         } catch (error) {
-            console.error("Login error:", error);
             alert("Login failed: " + error.message);
         }
     }
 
     function logoutUser() {
         auth.signOut();
+    }
+
+    function switchTab(tab) {
+        if (tab === 'dashboard') {
+            document.getElementById('dashboard-view').style.display = 'block';
+            document.getElementById('profile-view').style.display = 'none';
+            document.getElementById('nav-dash').style.background = '#eff6ff';
+            document.getElementById('nav-dash').style.color = '#2563eb';
+            document.getElementById('nav-prof').style.background = '#f1f5f9';
+            document.getElementById('nav-prof').style.color = '#334155';
+        } else {
+            document.getElementById('dashboard-view').style.display = 'none';
+            document.getElementById('profile-view').style.display = 'block';
+            document.getElementById('nav-prof').style.background = '#eff6ff';
+            document.getElementById('nav-prof').style.color = '#2563eb';
+            document.getElementById('nav-dash').style.background = '#f1f5f9';
+            document.getElementById('nav-dash').style.color = '#334155';
+        }
+    }
+
+    function switchSubTab(sub) {
+        if (sub === 'game') {
+            document.getElementById('subtab-game').style.display = 'block';
+            document.getElementById('subtab-referral').style.display = 'none';
+            document.getElementById('subtab-game-btn').style.background = 'white';
+            document.getElementById('subtab-game-btn').style.color = '#1e293b';
+            document.getElementById('subtab-ref-btn').style.background = 'transparent';
+            document.getElementById('subtab-ref-btn').style.color = '#64748b';
+        } else {
+            document.getElementById('subtab-game').style.display = 'none';
+            document.getElementById('subtab-referral').style.display = 'block';
+            document.getElementById('subtab-ref-btn').style.background = 'white';
+            document.getElementById('subtab-ref-btn').style.color = '#1e293b';
+            document.getElementById('subtab-game-btn').style.background = 'transparent';
+            document.getElementById('subtab-game-btn').style.color = '#64748b';
+        }
     }
 
     function startGameSession() {
@@ -144,7 +273,6 @@
         statusText.style.display = 'none';
 
         let randomDelay = Math.floor(Math.random() * 2000) + 1000;
-
         setTimeout(() => {
             instructions.innerText = "Catch it!";
             targetBtn.style.display = 'inline-block';
@@ -162,11 +290,10 @@
         const startBtn = document.getElementById('start-game-btn');
 
         targetBtn.style.display = 'none';
-        instructions.innerText = "Round Finished! Opening sponsor ad...";
+        instructions.innerText = "Opening sponsor ad...";
         statusText.style.display = 'block';
         statusText.innerText = "Loading ad experience...";
 
-        // Forces absolute protocol opening to avoid relative path 404 bugs
         window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
 
         let countdown = 5;
@@ -176,25 +303,21 @@
                 statusText.innerText = `Please view sponsor page... ${countdown}s remaining`;
             } else {
                 clearInterval(rewardTimer);
-                statusText.innerText = "Reward earned! Updating balance...";
-
                 try {
                     const userRef = db.collection("users").doc(activeUser.uid);
                     await userRef.update({
                         balance: firebase.firestore.FieldValue.increment(0.01)
                     });
-
                     const updatedSnap = await userRef.get();
                     document.getElementById('display-balance').innerText = updatedSnap.data().balance.toFixed(2);
                     
-                    statusText.innerText = "Success! +$0.01 added to your wallet.";
+                    statusText.innerText = "Success! +$0.01 added to wallet.";
                     statusText.style.color = "#059669";
                     startBtn.disabled = false;
                     startBtn.style.opacity = '1';
                     startBtn.innerText = "Play Another Round";
-                    instructions.innerText = "Click 'Play Another Round' to earn more!";
+                    instructions.innerText = "Click to earn more!";
                 } catch (err) {
-                    console.error("Credit error:", err);
                     statusText.innerText = "Error crediting balance.";
                     startBtn.disabled = false;
                     startBtn.style.opacity = '1';
@@ -202,4 +325,103 @@
             }
         }, 1000);
     }
+
+    async function claimDailyBonus() {
+        const todayStr = new Date().toDateString();
+        const userRef = db.collection("users").doc(activeUser.uid);
+        const docSnap = await userRef.get();
+        const data = docSnap.data();
+
+        if (data.lastClaimDate === todayStr) {
+            alert("You have already claimed your daily bonus today! Come back tomorrow.");
+            return;
+        }
+
+        await userRef.update({
+            balance: firebase.firestore.FieldValue.increment(0.05),
+            lastClaimDate: todayStr
+        });
+
+        const updatedSnap = await userRef.get();
+        document.getElementById('display-balance').innerText = updatedSnap.data().balance.toFixed(2);
+        alert("Success! +$0.05 daily bonus added to your wallet.");
+    }
+
+    function copyRefLink() {
+        const linkText = document.getElementById('ref-link-box').innerText;
+        navigator.clipboard.writeText(linkText);
+        alert("Referral link copied to clipboard!");
+    }
+
+    async function saveProfileSettings() {
+        const method = document.getElementById('prof-method').value;
+        const details = document.getElementById('prof-details').value;
+
+        if (!details.trim()) {
+            alert("Please enter your account details or purse ID.");
+            return;
+        }
+
+        try {
+            await db.collection("users").doc(activeUser.uid).update({
+                payoutMethod: method,
+                payoutDetails: details
+            });
+            alert("Profile settings saved successfully!");
+        } catch (e) {
+            alert("Error saving settings.");
+        }
+    }
+
+    function openWithdrawModal() {
+        document.getElementById('withdraw-modal').style.display = 'flex';
+    }
+
+    function closeWithdrawModal() {
+        document.getElementById('withdraw-modal').style.display = 'none';
+    }
+
+    async function submitWithdrawal() {
+        const amount = parseFloat(document.getElementById('withdraw-amount').value);
+        const currentBalance = parseFloat(document.getElementById('display-balance').innerText);
+
+        if (isNaN(amount) || amount <= 0) {
+            alert("Please enter a valid withdrawal amount.");
+            return;
+        }
+        if (amount > currentBalance) {
+            alert("You cannot withdraw more than your current balance.");
+            return;
+        }
+        if (amount < 5.00) {
+            alert("Minimum withdrawal amount is $5.00.");
+            return;
+        }
+
+        try {
+            // Save withdrawal request record in Firestore
+            await db.collection("withdrawals").add({
+                userId: activeUser.uid,
+                email: activeUser.email,
+                amount: amount,
+                status: "Pending",
+                timestamp: new Date()
+            });
+
+            // Deduct balance
+            await db.collection("users").doc(activeUser.uid).update({
+                balance: firebase.firestore.FieldValue.increment(-amount)
+            });
+
+            const updatedSnap = await db.collection("users").doc(activeUser.uid).get();
+            document.getElementById('display-balance').innerText = updatedSnap.data().balance.toFixed(2);
+
+            closeWithdrawModal();
+            alert("Withdrawal request submitted successfully! It will be reviewed and paid out shortly.");
+        } catch (e) {
+            alert("Error submitting withdrawal request.");
+        }
+    }
 </script>
+</body>
+</html>
