@@ -58,7 +58,7 @@
     </div>
 </div>
 
-<!-- Firebase SDK (Compat Version for Stable Web Execution) -->
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
@@ -82,7 +82,6 @@
     let gameActive = false;
     const ADSTERRA_DIRECT_LINK = "YOUR_ADSTERRA_DIRECT_LINK_URL";
 
-    // Track Authentication state changes safely
     auth.onAuthStateChanged(async (user) => {
         if (user) {
             activeUser = user;
@@ -93,8 +92,12 @@
             document.getElementById('logout-btn').style.display = 'inline-block';
 
             try {
-                const userDoc = await db.collection("users").doc(user.uid).get();
-                if (userDoc.exists) {
+                const userRef = db.collection("users").doc(user.uid);
+                const userDoc = await userRef.get();
+                if (!userDoc.exists) {
+                    await userRef.set({ email: user.email, balance: 0.00, createdAt: new Date() });
+                    document.getElementById('display-balance').innerText = "0.00";
+                } else {
                     document.getElementById('display-balance').innerText = userDoc.data().balance.toFixed(2);
                 }
             } catch (e) {
@@ -109,28 +112,22 @@
         }
     });
 
-    // Google Login using Redirect method to avoid mobile popup blocks
-    function handleGoogleLogin() {
+    // Google Login using Popup method to prevent loop blocks
+    async function handleGoogleLogin() {
         const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithRedirect(provider).catch((error) => {
-            console.error("Login error:", error);
-            alert("Login failed: " + error.message);
-        });
-    }
-
-    // Check if returning from redirect sign-in
-    auth.getRedirectResult().then(async (result) => {
-        if (result && result.user) {
+        try {
+            const result = await auth.signInWithPopup(provider);
             const user = result.user;
             const userRef = db.collection("users").doc(user.uid);
             const docSnap = await userRef.get();
             if (!docSnap.exists) {
                 await userRef.set({ email: user.email, balance: 0.00, createdAt: new Date() });
             }
+        } catch (error) {
+            console.error("Login error:", error);
+            alert("Login failed: " + error.message);
         }
-    }).catch((err) => {
-        console.error("Redirect result error:", err);
-    });
+    }
 
     function logoutUser() {
         auth.signOut();
@@ -206,4 +203,3 @@
         }, 1000);
     }
 </script>
-
