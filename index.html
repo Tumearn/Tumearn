@@ -58,13 +58,13 @@
             <!-- Game Subtab Content (Multiple Mini-Games) -->
             <div id="subtab-game" style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px;">
                 <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b; text-align:center;">Select Mini-Game</h3>
-                <p style="margin:0 0 15px 0; font-size:12px; color:#64748b; text-align:center;">Play games, view ads, and earn $0.001 per win!</p>
+                <p style="margin:0 0 15px 0; font-size:12px; color:#64748b; text-align:center;">Play games & earn rewards with sponsor ads!</p>
 
                 <!-- Mini-Game Selection Buttons -->
                 <div style="display:flex; gap:5px; margin-bottom:15px;">
                     <button onclick="switchMiniGame('reaction')" id="minigame-btn-reaction" style="flex:1; background:#2563eb; color:white; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Reaction</button>
                     <button onclick="switchMiniGame('guess')" id="minigame-btn-guess" style="flex:1; background:#f1f5f9; color:#475569; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Number Guess</button>
-                    <button onclick="switchMiniGame('spin')" id="minigame-btn-spin" style="flex:1; background:#f1f5f9; color:#475569; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Lucky Spin</button>
+                    <button onclick="switchMiniGame('spin')" id="minigame-btn-spin" style="flex:1; background:#f1f5f9; color:#475569; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Lucky Spinner</button>
                 </div>
 
                 <!-- 1. Reaction Clicker Game Container -->
@@ -79,22 +79,24 @@
                     <p id="game-status" style="margin:10px 0 0 0; font-size:12px; color:#64748b; display:none; text-align:center;"></p>
                 </div>
 
-                <!-- 2. Number Guessing Game Container -->
+                <!-- 2. Number Guessing Game Container ($0.02 on correct match with ad trigger) -->
                 <div id="game-guess-pane" style="display:none; text-align:center;">
                     <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:10px; margin-bottom:15px;">
-                        <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong>:</p>
+                        <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong> (Win <strong style="color:#059669;">$0.02</strong> if correct):</p>
                         <input type="number" id="guess-input" min="1" max="5" placeholder="Enter number (1-5)" style="width:140px; padding:8px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; text-align:center; margin-bottom:10px;"><br>
-                        <button onclick="submitGuess()" style="background:#10b981; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:12px;">Submit Guess</button>
+                        <button onclick="submitGuess()" style="background:#10b981; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:12px;">Submit Guess & View Ad</button>
                     </div>
                     <p id="guess-status" style="margin:0; font-size:12px; color:#64748b;"></p>
                 </div>
 
-                <!-- 3. Lucky Spin Game Container -->
+                <!-- 3. Real Lucky Spinner Container (Rewards: $0.00, $0.01, $0.02, $0.03, $0.05) -->
                 <div id="game-spin-pane" style="display:none; text-align:center;">
                     <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:20px; border-radius:10px; margin-bottom:15px;">
-                        <div id="spin-wheel-box" style="font-size:24px; font-weight:bold; color:#2563eb; margin-bottom:10px;">🎁 ? 🎁</div>
-                        <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Spin the box to trigger a sponsor ad and win $0.001!</p>
-                        <button id="spin-btn" onclick="startSpinGame()" style="background:#8b5cf6; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Spin Now</button>
+                        <div id="spinner-display" style="width:100px; height:100px; margin:0 auto 12px auto; background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; box-shadow:0 4px 10px rgba(139,92,246,0.3);">
+                            <span id="spinner-text">SPIN</span>
+                        </div>
+                        <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Real wheel with weighted odds! Win up to $0.05 per spin.</p>
+                        <button id="spin-btn" onclick="startRealSpinner()" style="background:#8b5cf6; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Spin the Wheel</button>
                     </div>
                     <p id="spin-status" style="margin:0; font-size:12px; color:#64748b;"></p>
                 </div>
@@ -426,10 +428,10 @@
 
         window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
 
-        runRewardCountdown(statusText, startBtn, instructions, "Play Another Round", "Click to earn more!");
+        runRewardCountdown(statusText, startBtn, instructions, "Play Another Round", "Click to earn more!", 0.001);
     }
 
-    // 2. Number Guessing Game Logic
+    // 2. Number Guessing Game Logic ($0.02 on correct answer + Ad on submit)
     function submitGuess() {
         const val = parseInt(document.getElementById('guess-input').value);
         const guessStatus = document.getElementById('guess-status');
@@ -440,39 +442,80 @@
             return;
         }
 
+        // Trigger ad immediately on submit button click
+        window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
+
         let secret = Math.floor(Math.random() * 5) + 1;
         if (val === secret) {
-            guessStatus.innerText = `Correct! Secret was ${secret}. Opening sponsor ad...`;
+            guessStatus.innerText = `Correct! Secret was ${secret}. Crediting $0.02...`;
             guessStatus.style.color = "#059669";
-            window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
-            runRewardCountdown(guessStatus, null, null, null, "Guessed right! Reward added.");
+            runRewardCountdown(guessStatus, null, null, null, "Guessed right! +$0.02 added.", 0.02);
         } else {
-            guessStatus.innerText = `Wrong! Secret was ${secret}. Try again!`;
+            guessStatus.innerText = `Wrong! Secret was ${secret}. No reward this time. Try again!`;
             guessStatus.style.color = "#dc2626";
         }
     }
 
-    // 3. Lucky Spin Game Logic
-    function startSpinGame() {
+    // 3. Real Lucky Spinner Game Logic with weighted distribution
+    // Rewards: 0.01, 0.00, 0.02, 0.03, 0.05, 0.00
+    function startRealSpinner() {
         const spinBtn = document.getElementById('spin-btn');
         const spinStatus = document.getElementById('spin-status');
-        const wheelBox = document.getElementById('spin-wheel-box');
+        const spinnerText = document.getElementById('spinner-text');
 
         spinBtn.disabled = true;
         spinBtn.style.opacity = '0.5';
         spinStatus.innerText = "Spinning wheel...";
-        wheelBox.innerText = "🌀 ... 🌀";
+        
+        // Visual spinning effect animation
+        let counter = 0;
+        let randomAnim = setInterval(() => {
+            let tempOpts = [0.00, 0.01, 0.00, 0.02, 0.03, 0.00, 0.05];
+            spinnerText.innerText = "$" + tempOpts[Math.floor(Math.random() * tempOpts.length)].toFixed(2);
+            counter++;
+            if (counter > 12) {
+                clearInterval(randomAnim);
+                finalizeSpinResult(spinBtn, spinStatus, spinnerText);
+            }
+        }, 100);
+    }
 
-        setTimeout(() => {
-            wheelBox.innerText = "🎉 WINNER! 🎉";
-            spinStatus.innerText = "Opening sponsor ad for reward...";
-            window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
-            runRewardCountdown(spinStatus, spinBtn, null, "Spin Again", "Spin completed!");
-        }, 1500);
+    function finalizeSpinResult(spinBtn, spinStatus, spinnerText) {
+        // Weighted probability logic: Higher chance for 0.00 and 0.01, lower chance for 0.05
+        // Array pool representing weights:
+        // 0.00 -> 35% chance
+        // 0.01 -> 30% chance
+        // 0.02 -> 15% chance
+        // 0.03 -> 12% chance
+        // 0.05 -> 8% chance
+        const pool = [
+            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+            0.01, 0.01, 0.01, 0.01, 0.01, 0.01,
+            0.02, 0.02, 0.02,
+            0.03, 0.03,
+            0.05
+        ];
+
+        let selectedReward = pool[Math.floor(Math.random() * pool.length)];
+        spinnerText.innerText = "$" + selectedReward.toFixed(2);
+
+        // Open sponsor ad on spin completion
+        window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
+
+        if (selectedReward > 0) {
+            spinStatus.innerText = `Congratulations! You won $${selectedReward.toFixed(2)}. Opening sponsor ad...`;
+            spinStatus.style.color = "#059669";
+            runRewardCountdown(spinStatus, spinBtn, null, "Spin Again", "Spin completed!", selectedReward);
+        } else {
+            spinStatus.innerText = "Oops! You hit $0.00. Better luck next time!";
+            spinStatus.style.color = "#dc2626";
+            spinBtn.disabled = false;
+            spinBtn.style.opacity = '1';
+        }
     }
 
     // Universal reward execution helper after opening ad
-    function runRewardCountdown(statusElement, buttonElement, instructionElement, btnText, instText) {
+    function runRewardCountdown(statusElement, buttonElement, instructionElement, btnText, instText, rewardVal) {
         let countdown = 5;
         let rewardTimer = setInterval(async () => {
             countdown--;
@@ -483,12 +526,12 @@
                 try {
                     const userRef = db.collection("users").doc(activeUser.uid);
                     await userRef.update({
-                        balance: firebase.firestore.FieldValue.increment(0.001)
+                        balance: firebase.firestore.FieldValue.increment(rewardVal)
                     });
                     const updatedSnap = await userRef.get();
                     document.getElementById('display-balance').innerText = updatedSnap.data().balance.toFixed(3);
                     
-                    statusElement.innerText = "Success! +$0.001 added to wallet.";
+                    statusElement.innerText = `Success! +$${rewardVal.toFixed(3)} added to wallet.`;
                     statusElement.style.color = "#059669";
                     if (buttonElement) {
                         buttonElement.disabled = false;
