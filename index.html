@@ -79,23 +79,23 @@
                     <p id="game-status" style="margin:10px 0 0 0; font-size:12px; color:#64748b; display:none; text-align:center;"></p>
                 </div>
 
-                <!-- 2. Number Guessing Game Container ($0.02 on correct match with ad trigger) -->
+                <!-- 2. Number Guessing Game Container (100% win rate: Ad on submit button, +$0.02 if correct, $0.00 if wrong) -->
                 <div id="game-guess-pane" style="display:none; text-align:center;">
                     <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:10px; margin-bottom:15px;">
-                        <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong> (Win <strong style="color:#059669;">$0.02</strong> if correct):</p>
+                        <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong> (Win <strong style="color:#059669;">$0.02</strong> if correct, $0.00 if wrong):</p>
                         <input type="number" id="guess-input" min="1" max="5" placeholder="Enter number (1-5)" style="width:140px; padding:8px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; text-align:center; margin-bottom:10px;"><br>
                         <button onclick="submitGuess()" style="background:#10b981; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:12px;">Submit Guess & View Ad</button>
                     </div>
                     <p id="guess-status" style="margin:0; font-size:12px; color:#64748b;"></p>
                 </div>
 
-                <!-- 3. Real Lucky Spinner Container (Rewards: $0.00, $0.01, $0.02, $0.03, $0.05) -->
+                <!-- 3. Real Lucky Spinner Container (Rewards: 0.01, 0.00, 0.02, 0.03, 0.05, 0.00 with weighted chances) -->
                 <div id="game-spin-pane" style="display:none; text-align:center;">
                     <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:20px; border-radius:10px; margin-bottom:15px;">
                         <div id="spinner-display" style="width:100px; height:100px; margin:0 auto 12px auto; background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; box-shadow:0 4px 10px rgba(139,92,246,0.3);">
                             <span id="spinner-text">SPIN</span>
                         </div>
-                        <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Real wheel with weighted odds! Win up to $0.05 per spin.</p>
+                        <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Real wheel with weighted odds! Win $0.01, $0.02, $0.03, $0.05, or $0.00.</p>
                         <button id="spin-btn" onclick="startRealSpinner()" style="background:#8b5cf6; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Spin the Wheel</button>
                     </div>
                     <p id="spin-status" style="margin:0; font-size:12px; color:#64748b;"></p>
@@ -114,35 +114,16 @@
             </div>
         </div>
 
-        <!-- Profile View -->
+        <!-- Profile View (Withdrawal Details section removed) -->
         <div id="profile-view" style="display:none; background:white; padding:20px; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <h3 style="margin-top:0; color:#1e293b; font-size:18px;">Account Profile</h3>
-            <p style="font-size:13px; color:#64748b; margin-bottom:20px;">Manage your login credentials and payout preferences.</p>
+            <p style="font-size:13px; color:#64748b; margin-bottom:20px;">Manage your account details and login credentials.</p>
             
-            <div style="margin-bottom:15px;">
+            <div style="margin-bottom:20px;">
                 <label style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:5px;">Email Address</label>
                 <input type="text" id="prof-email" readonly style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; background:#f8fafc; font-size:13px; box-sizing:border-box;">
             </div>
 
-            <div style="margin-bottom:20px;">
-                <label style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:5px;">Select Preferred Payout Method</label>
-                <select id="prof-method" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; background:white; font-size:13px; box-sizing:border-box;">
-                    <option value="WebMoney WMT">WebMoney WMT (Min. $5.00 | 2% Method Fee | 1-2 Days)</option>
-                    <option value="WebMoney WMZ">WebMoney WMZ (Min. $5.00 | 1% Method Fee | 1-2 Days)</option>
-                    <option value="Paxum">Paxum (Min. $5.00 | $1.00 Fee | 1-2 Days)</option>
-                    <option value="LocalBank">Local Bank Transfer (Min. $25.00 | $7.00 + Exch. Rate | Up to 5 Days)</option>
-                    <option value="PayPal">PayPal / Hyperwallet (Min. $25.00 | Standard Fee)</option>
-                    <option value="Crypto">Cryptocurrency / USDT (Min. $100.00 | Network Fee)</option>
-                    <option value="Wire">Wire Transfer (Min. $1,000.00 | Bank Fee)</option>
-                </select>
-            </div>
-
-            <div style="margin-bottom:20px;">
-                <label style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:5px;">Account / Wallet Details (Number or Purse)</label>
-                <input type="text" id="prof-details" placeholder="Enter account details or purse ID" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; box-sizing:border-box;">
-            </div>
-
-            <button onclick="saveProfileSettings()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom:10px;">Save Profile Settings</button>
             <button onclick="logoutUser()" style="width:100%; background:#fee2e2; color:#dc2626; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Logout</button>
         </div>
     </div>
@@ -162,16 +143,35 @@
     </div>
 </div>
 
-<!-- Withdrawal Modal Popup (Exclusive 5% Withdrawal Section Fee Calculation) -->
+<!-- Withdrawal Modal Popup with Dynamic Method Info Display -->
 <div id="withdraw-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:9998;">
     <div style="background:white; padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:left; box-shadow:0 10px 25px rgba(0,0,0,0.15);">
         <h3 style="margin-top:0; color:#1e293b; font-size:18px; text-align:center;">Request Payout</h3>
         
-        <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:10px; border-radius:8px; font-size:11px; color:#475569; margin-bottom:12px; line-height:1.4;">
-            <strong>Withdrawal Section Terms & Fee:</strong><br>
-            • <strong>Website Withdrawal Fee:</strong> 5% is strictly deducted here upon payout request.<br>
-            • Minimum withdrawal amount is $5.00.<br>
-            • Processing window: 1–3 business days.
+        <div style="margin-bottom:12px;">
+            <label style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:5px;">Select Payout Method</label>
+            <select id="withdraw-method" onchange="onWithdrawMethodChange()" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; background:white; font-size:13px; box-sizing:border-box;">
+                <option value="">-- Choose Withdrawal Method --</option>
+                <option value="WebMoney WMT">WebMoney WMT</option>
+                <option value="WebMoney WMZ">WebMoney WMZ</option>
+                <option value="Paxum">Paxum</option>
+                <option value="LocalBank">Local Bank Transfer</option>
+                <option value="PayPal">PayPal / Hyperwallet</option>
+                <option value="Crypto">Cryptocurrency / USDT</option>
+                <option value="Wire">Wire Transfer</option>
+            </select>
+        </div>
+
+        <!-- Dynamic Info Box (Hidden until method chosen) -->
+        <div id="method-info-box" style="display:none; background:#f8fafc; border:1px solid #e2e8f0; padding:10px; border-radius:8px; font-size:11px; color:#475569; margin-bottom:12px; line-height:1.5;">
+            <div>• <strong>Minimum Limit:</strong> <span id="info-limit">$5.00</span></div>
+            <div>• <strong>Withdrawal Method Fee:</strong> <span id="info-method-fee">0%</span></div>
+            <div>• <strong>Website Fee:</strong> <span id="info-website-fee">5.00%</span></div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+            <label style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:5px;">Account / Wallet Details (Number or Purse)</label>
+            <input type="text" id="withdraw-details" placeholder="Enter account details or purse ID" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; box-sizing:border-box;">
         </div>
 
         <div style="margin-bottom:12px;">
@@ -181,7 +181,8 @@
         <!-- Live Breakdown View inside Withdrawal Section -->
         <div style="background:#f1f5f9; padding:10px; border-radius:8px; font-size:12px; color:#334155; margin-bottom:15px; line-height:1.5;">
             <div>Requested Amount: <strong>$<span id="calc-requested">0.00</span></strong></div>
-            <div>Website Fee (5%): <strong style="color:#dc2626;">-$<span id="calc-fee">0.00</span></strong></div>
+            <div>Method Fee: <strong style="color:#dc2626;">-$<span id="calc-method-fee">0.00</span></strong></div>
+            <div>Website Fee (5%): <strong style="color:#dc2626;">-$<span id="calc-web-fee">0.00</span></strong></div>
             <div style="border-top:1px solid #cbd5e1; margin-top:4px; padding-top:4px;">You Will Receive: <strong style="color:#059669;">$<span id="calc-net">0.00</span></strong></div>
         </div>
 
@@ -215,6 +216,17 @@
     let activeUser = null;
     let gameActive = false;
     const ADSTERRA_DIRECT_LINK = "https://www.effectivecpmnetwork.com/d2cwtcwg?key=315a2a65f103daae0647c8555ad0a203";
+
+    // Method specifications configuration object
+    const methodSpecs = {
+        "WebMoney WMT": { min: 5.00, methodFeePct: 0.02, methodFeeFlat: 0, desc: "Min. $5.00 | 2% Method Fee | 1-2 Days" },
+        "WebMoney WMZ": { min: 5.00, methodFeePct: 0.01, methodFeeFlat: 0, desc: "Min. $5.00 | 1% Method Fee | 1-2 Days" },
+        "Paxum": { min: 5.00, methodFeePct: 0, methodFeeFlat: 1.00, desc: "Min. $5.00 | $1.00 Flat Fee | 1-2 Days" },
+        "LocalBank": { min: 25.00, methodFeePct: 0, methodFeeFlat: 7.00, desc: "Min. $25.00 | $7.00 + Exch. Rate Fee | Up to 5 Days" },
+        "PayPal": { min: 25.00, methodFeePct: 0.03, methodFeeFlat: 0, desc: "Min. $25.00 | Standard Fee | 1-3 Days" },
+        "Crypto": { min: 100.00, methodFeePct: 0, methodFeeFlat: 5.00, desc: "Min. $100.00 | Network Fee ($5.00) | Fast" },
+        "Wire": { min: 1000.00, methodFeePct: 0, methodFeeFlat: 25.00, desc: "Min. $1,000.00 | Bank Fee ($25.00) | 3-5 Days" }
+    };
 
     const bonusAmounts = { 1: 0.01, 2: 0.02, 3: 0.03, 4: 0.04, 5: 0.05, 6: 0.06, 7: 0.07 };
 
@@ -281,8 +293,6 @@
                         referrals: 0,
                         lastClaimDate: "",
                         streakDay: 0,
-                        payoutMethod: "WebMoney WMT",
-                        payoutDetails: "",
                         createdAt: new Date()
                     };
                     if (referredBy && referredBy !== user.uid) {
@@ -302,8 +312,6 @@
                 document.getElementById('display-balance').innerText = data.balance.toFixed(3);
                 document.getElementById('ref-count').innerText = data.referrals || 0;
                 document.getElementById('prof-email').value = user.email;
-                document.getElementById('prof-method').value = data.payoutMethod || "WebMoney WMT";
-                document.getElementById('prof-details').value = data.payoutDetails || "";
 
                 let claimedToday = (data.lastClaimDate === todayStr);
                 let currentStreak = data.streakDay || 1;
@@ -431,7 +439,7 @@
         runRewardCountdown(statusText, startBtn, instructions, "Play Another Round", "Click to earn more!", 0.001);
     }
 
-    // 2. Number Guessing Game Logic ($0.02 on correct answer + Ad on submit)
+    // 2. Number Guessing Game Logic (100% win rate: ad on submit, $0.02 if correct, $0.00 if wrong)
     function submitGuess() {
         const val = parseInt(document.getElementById('guess-input').value);
         const guessStatus = document.getElementById('guess-status');
@@ -451,13 +459,12 @@
             guessStatus.style.color = "#059669";
             runRewardCountdown(guessStatus, null, null, null, "Guessed right! +$0.02 added.", 0.02);
         } else {
-            guessStatus.innerText = `Wrong! Secret was ${secret}. No reward this time. Try again!`;
+            guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Try again!`;
             guessStatus.style.color = "#dc2626";
         }
     }
 
-    // 3. Real Lucky Spinner Game Logic with weighted distribution
-    // Rewards: 0.01, 0.00, 0.02, 0.03, 0.05, 0.00
+    // 3. Real Lucky Spinner Game Logic with weighted distribution (Rewards: 0.01, 0.00, 0.02, 0.03, 0.05, 0.00)
     function startRealSpinner() {
         const spinBtn = document.getElementById('spin-btn');
         const spinStatus = document.getElementById('spin-status');
@@ -467,7 +474,6 @@
         spinBtn.style.opacity = '0.5';
         spinStatus.innerText = "Spinning wheel...";
         
-        // Visual spinning effect animation
         let counter = 0;
         let randomAnim = setInterval(() => {
             let tempOpts = [0.00, 0.01, 0.00, 0.02, 0.03, 0.00, 0.05];
@@ -482,12 +488,6 @@
 
     function finalizeSpinResult(spinBtn, spinStatus, spinnerText) {
         // Weighted probability logic: Higher chance for 0.00 and 0.01, lower chance for 0.05
-        // Array pool representing weights:
-        // 0.00 -> 35% chance
-        // 0.01 -> 30% chance
-        // 0.02 -> 15% chance
-        // 0.03 -> 12% chance
-        // 0.05 -> 8% chance
         const pool = [
             0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
             0.01, 0.01, 0.01, 0.01, 0.01, 0.01,
@@ -589,30 +589,14 @@
         showToast("Copied!", "Referral link copied to clipboard!");
     }
 
-    async function saveProfileSettings() {
-        const method = document.getElementById('prof-method').value;
-        const details = document.getElementById('prof-details').value;
-
-        if (!details.trim()) {
-            showToast("Missing Details", "Please enter your account details or purse ID.");
-            return;
-        }
-
-        try {
-            await db.collection("users").doc(activeUser.uid).update({
-                payoutMethod: method,
-                payoutDetails: details
-            });
-            showToast("Saved", "Profile settings saved successfully!");
-        } catch (e) {
-            showToast("Error", "Error saving settings.");
-        }
-    }
-
     function openWithdrawModal() {
+        document.getElementById('withdraw-method').value = '';
+        document.getElementById('withdraw-details').value = '';
         document.getElementById('withdraw-amount').value = '';
+        document.getElementById('method-info-box').style.display = 'none';
         document.getElementById('calc-requested').innerText = '0.00';
-        document.getElementById('calc-fee').innerText = '0.00';
+        document.getElementById('calc-method-fee').innerText = '0.00';
+        document.getElementById('calc-web-fee').innerText = '0.00';
         document.getElementById('calc-net').innerText = '0.00';
         document.getElementById('withdraw-modal').style.display = 'flex';
     }
@@ -621,42 +605,98 @@
         document.getElementById('withdraw-modal').style.display = 'none';
     }
 
+    // Show method-specific limits and fees dynamically after user chooses method option
+    function onWithdrawMethodChange() {
+        const method = document.getElementById('withdraw-method').value;
+        const infoBox = document.getElementById('method-info-box');
+
+        if (!method || !methodSpecs[method]) {
+            infoBox.style.display = 'none';
+            return;
+        }
+
+        let spec = methodSpecs[method];
+        document.getElementById('info-limit').innerText = `$${spec.min.toFixed(2)}`;
+        
+        let methodFeeText = "0%";
+        if (spec.methodFeePct > 0) {
+            methodFeeText = `${(spec.methodFeePct * 100)}%`;
+        } else if (spec.methodFeeFlat > 0) {
+            methodFeeText = `$${spec.methodFeeFlat.toFixed(2)} flat`;
+        }
+        document.getElementById('info-method-fee').innerText = methodFeeText;
+        document.getElementById('info-website-fee').innerText = "5.00%";
+
+        infoBox.style.display = 'block';
+        calculateWithdrawFee();
+    }
+
     function calculateWithdrawFee() {
+        const method = document.getElementById('withdraw-method').value;
         const amount = parseFloat(document.getElementById('withdraw-amount').value) || 0;
-        let fee = amount * 0.05;
-        let net = amount - fee;
+
+        let methodFee = 0;
+        if (method && methodSpecs[method]) {
+            let spec = methodSpecs[method];
+            if (spec.methodFeePct > 0) {
+                methodFee = amount * spec.methodFeePct;
+            } else if (spec.methodFeeFlat > 0) {
+                methodFee = spec.methodFeeFlat;
+            }
+        }
+
+        let websiteFee = amount * 0.05;
+        let net = amount - methodFee - websiteFee;
+
         document.getElementById('calc-requested').innerText = amount.toFixed(2);
-        document.getElementById('calc-fee').innerText = fee.toFixed(2);
+        document.getElementById('calc-method-fee').innerText = methodFee.toFixed(2);
+        document.getElementById('calc-web-fee').innerText = websiteFee.toFixed(2);
         document.getElementById('calc-net').innerText = net > 0 ? net.toFixed(2) : '0.00';
     }
 
     async function submitWithdrawal() {
+        const method = document.getElementById('withdraw-method').value;
+        const details = document.getElementById('withdraw-details').value;
         const amount = parseFloat(document.getElementById('withdraw-amount').value);
         const currentBalance = parseFloat(document.getElementById('display-balance').innerText);
 
+        if (!method) {
+            showToast("Select Method", "Please choose a withdrawal method.");
+            return;
+        }
+        if (!details.trim()) {
+            showToast("Missing Details", "Please enter your account details or purse ID.");
+            return;
+        }
         if (isNaN(amount) || amount <= 0) {
             showToast("Invalid Amount", "Please enter a valid withdrawal amount.");
+            return;
+        }
+
+        let spec = methodSpecs[method];
+        if (amount < spec.min) {
+            showToast("Minimum Limit", `Minimum withdrawal amount for ${method} is $${spec.min.toFixed(2)}.`);
             return;
         }
         if (amount > currentBalance) {
             showToast("Insufficient Balance", "You cannot withdraw more than your current balance.");
             return;
         }
-        if (amount < 5.00) {
-            showToast("Minimum Limit", "Minimum withdrawal amount is $5.00.");
-            return;
-        }
 
-        let platformFee = amount * 0.05;
-        let netPayout = amount - platformFee;
+        let methodFee = spec.methodFeePct > 0 ? (amount * spec.methodFeePct) : spec.methodFeeFlat;
+        let websiteFee = amount * 0.05;
+        let netPayout = amount - methodFee - websiteFee;
         let totalDeduction = amount; // Full requested amount deducted from user balance
 
         try {
             await db.collection("withdrawals").add({
                 userId: activeUser.uid,
                 email: activeUser.email,
+                method: method,
+                details: details,
                 requestedAmount: amount,
-                platformFee: platformFee,
+                methodFee: methodFee,
+                websiteFee: websiteFee,
                 netPayout: netPayout,
                 status: "Pending",
                 timestamp: new Date()
@@ -670,7 +710,7 @@
             document.getElementById('display-balance').innerText = updatedSnap.data().balance.toFixed(3);
 
             closeWithdrawModal();
-            showToast("Request Submitted", `Withdrawal submitted successfully! 5% fee ($${platformFee.toFixed(2)}) applied. Net payout: $${netPayout.toFixed(2)}. Processing takes 1-3 business days.`);
+            showToast("Request Submitted", `Withdrawal via ${method} submitted successfully! Net payout: $${netPayout.toFixed(2)}. Processing takes 1-3 business days.`);
         } catch (e) {
             showToast("Error", "Error submitting withdrawal request.");
         }
