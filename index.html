@@ -166,7 +166,8 @@
         statusText.style.display = 'block';
         statusText.innerText = "Loading ad experience...";
 
-        window.open(ADSTERRA_DIRECT_LINK, '_blank');
+        // Forces absolute protocol opening to avoid relative path 404 bugs
+        window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
 
         let countdown = 5;
         let rewardTimer = setInterval(async () => {
