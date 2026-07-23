@@ -79,17 +79,17 @@
                     <p id="game-status" style="margin:10px 0 0 0; font-size:12px; color:#64748b; display:none; text-align:center;"></p>
                 </div>
 
-                <!-- 2. Number Guessing Game Container (100% win rate: Ad on submit button, +$0.02 if correct, $0.00 if wrong) -->
+                <!-- 2. Number Guessing Game Container -->
                 <div id="game-guess-pane" style="display:none; text-align:center;">
                     <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:10px; margin-bottom:15px;">
                         <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong> (Win <strong style="color:#059669;">$0.02</strong> if correct, $0.00 if wrong):</p>
                         <input type="number" id="guess-input" min="1" max="5" placeholder="Enter number (1-5)" style="width:140px; padding:8px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; text-align:center; margin-bottom:10px;"><br>
-                        <button onclick="submitGuess()" style="background:#10b981; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:12px;">Submit Guess & View Ad</button>
+                        <button onclick="submitGuess()" style="background:#10b981; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:12px;">Submit Guess & Open Ad</button>
                     </div>
                     <p id="guess-status" style="margin:0; font-size:12px; color:#64748b;"></p>
                 </div>
 
-                <!-- 3. Real Lucky Spinner Container (Rewards: 0.01, 0.00, 0.02, 0.03, 0.05, 0.00 with weighted chances) -->
+                <!-- 3. Real Lucky Spinner Container -->
                 <div id="game-spin-pane" style="display:none; text-align:center;">
                     <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:20px; border-radius:10px; margin-bottom:15px;">
                         <div id="spinner-display" style="width:100px; height:100px; margin:0 auto 12px auto; background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; box-shadow:0 4px 10px rgba(139,92,246,0.3);">
@@ -114,7 +114,7 @@
             </div>
         </div>
 
-        <!-- Profile View (Withdrawal Details section removed) -->
+        <!-- Profile View -->
         <div id="profile-view" style="display:none; background:white; padding:20px; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <h3 style="margin-top:0; color:#1e293b; font-size:18px;">Account Profile</h3>
             <p style="font-size:13px; color:#64748b; margin-bottom:20px;">Manage your account details and login credentials.</p>
@@ -427,19 +427,18 @@
         const targetBtn = document.getElementById('target-btn');
         const instructions = document.getElementById('game-instructions');
         const statusText = document.getElementById('game-status');
-        const startBtn = document.getElementById('start-game-btn');
 
         targetBtn.style.display = 'none';
-        instructions.innerText = "Opening sponsor ad...";
+        instructions.innerText = "Opening sponsor offer...";
         statusText.style.display = 'block';
-        statusText.innerText = "Loading ad experience...";
+        statusText.innerText = "Redirecting to ad page...";
 
-        window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
-
-        runRewardCountdown(statusText, startBtn, instructions, "Play Another Round", "Click to earn more!", 0.001);
+        setTimeout(() => {
+            window.location.href = ADSTERRA_DIRECT_LINK;
+        }, 800);
     }
 
-    // 2. Number Guessing Game Logic (100% win rate: ad on submit, $0.02 if correct, $0.00 if wrong)
+    // 2. Number Guessing Game Logic
     function submitGuess() {
         const val = parseInt(document.getElementById('guess-input').value);
         const guessStatus = document.getElementById('guess-status');
@@ -450,21 +449,15 @@
             return;
         }
 
-        // Trigger ad immediately on submit button click
-        window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
+        guessStatus.innerText = "Opening sponsor page...";
+        guessStatus.style.color = "#2563eb";
 
-        let secret = Math.floor(Math.random() * 5) + 1;
-        if (val === secret) {
-            guessStatus.innerText = `Correct! Secret was ${secret}. Crediting $0.02...`;
-            guessStatus.style.color = "#059669";
-            runRewardCountdown(guessStatus, null, null, null, "Guessed right! +$0.02 added.", 0.02);
-        } else {
-            guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Try again!`;
-            guessStatus.style.color = "#dc2626";
-        }
+        setTimeout(() => {
+            window.location.href = ADSTERRA_DIRECT_LINK;
+        }, 800);
     }
 
-    // 3. Real Lucky Spinner Game Logic with weighted distribution (Rewards: 0.01, 0.00, 0.02, 0.03, 0.05, 0.00)
+    // 3. Real Lucky Spinner Game Logic
     function startRealSpinner() {
         const spinBtn = document.getElementById('spin-btn');
         const spinStatus = document.getElementById('spin-status');
@@ -481,75 +474,18 @@
             counter++;
             if (counter > 12) {
                 clearInterval(randomAnim);
-                finalizeSpinResult(spinBtn, spinStatus, spinnerText);
+                finalizeSpinResult(spinStatus);
             }
         }, 100);
     }
 
-    function finalizeSpinResult(spinBtn, spinStatus, spinnerText) {
-        // Weighted probability logic: Higher chance for 0.00 and 0.01, lower chance for 0.05
-        const pool = [
-            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
-            0.01, 0.01, 0.01, 0.01, 0.01, 0.01,
-            0.02, 0.02, 0.02,
-            0.03, 0.03,
-            0.05
-        ];
+    function finalizeSpinResult(spinStatus) {
+        spinStatus.innerText = "Spin completed! Opening sponsor page...";
+        spinStatus.style.color = "#059669";
 
-        let selectedReward = pool[Math.floor(Math.random() * pool.length)];
-        spinnerText.innerText = "$" + selectedReward.toFixed(2);
-
-        // Open sponsor ad on spin completion
-        window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
-
-        if (selectedReward > 0) {
-            spinStatus.innerText = `Congratulations! You won $${selectedReward.toFixed(2)}. Opening sponsor ad...`;
-            spinStatus.style.color = "#059669";
-            runRewardCountdown(spinStatus, spinBtn, null, "Spin Again", "Spin completed!", selectedReward);
-        } else {
-            spinStatus.innerText = "Oops! You hit $0.00. Better luck next time!";
-            spinStatus.style.color = "#dc2626";
-            spinBtn.disabled = false;
-            spinBtn.style.opacity = '1';
-        }
-    }
-
-    // Universal reward execution helper after opening ad
-    function runRewardCountdown(statusElement, buttonElement, instructionElement, btnText, instText, rewardVal) {
-        let countdown = 5;
-        let rewardTimer = setInterval(async () => {
-            countdown--;
-            if (countdown > 0) {
-                statusElement.innerText = `Please view sponsor page... ${countdown}s remaining`;
-            } else {
-                clearInterval(rewardTimer);
-                try {
-                    const userRef = db.collection("users").doc(activeUser.uid);
-                    await userRef.update({
-                        balance: firebase.firestore.FieldValue.increment(rewardVal)
-                    });
-                    const updatedSnap = await userRef.get();
-                    document.getElementById('display-balance').innerText = updatedSnap.data().balance.toFixed(3);
-                    
-                    statusElement.innerText = `Success! +$${rewardVal.toFixed(3)} added to wallet.`;
-                    statusElement.style.color = "#059669";
-                    if (buttonElement) {
-                        buttonElement.disabled = false;
-                        buttonElement.style.opacity = '1';
-                        if (btnText) buttonElement.innerText = btnText;
-                    }
-                    if (instructionElement && instText) {
-                        instructionElement.innerText = instText;
-                    }
-                } catch (err) {
-                    statusElement.innerText = "Error crediting balance.";
-                    if (buttonElement) {
-                        buttonElement.disabled = false;
-                        buttonElement.style.opacity = '1';
-                    }
-                }
-            }
-        }, 1000);
+        setTimeout(() => {
+            window.location.href = ADSTERRA_DIRECT_LINK;
+        }, 800);
     }
 
     async function claimDailyBonus() {
@@ -605,7 +541,6 @@
         document.getElementById('withdraw-modal').style.display = 'none';
     }
 
-    // Show method-specific limits and fees dynamically after user chooses method option
     function onWithdrawMethodChange() {
         const method = document.getElementById('withdraw-method').value;
         const infoBox = document.getElementById('method-info-box');
@@ -686,7 +621,7 @@
         let methodFee = spec.methodFeePct > 0 ? (amount * spec.methodFeePct) : spec.methodFeeFlat;
         let websiteFee = amount * 0.05;
         let netPayout = amount - methodFee - websiteFee;
-        let totalDeduction = amount; // Full requested amount deducted from user balance
+        let totalDeduction = amount;
 
         try {
             await db.collection("withdrawals").add({
