@@ -79,7 +79,7 @@
                     <p id="game-status" style="margin:10px 0 0 0; font-size:12px; color:#64748b; display:none; text-align:center;"></p>
                 </div>
 
-                <!-- 2. Number Guessing Game Container (100% win rate: Ad on submit button, +$0.02 if correct, $0.00 if wrong) -->
+                <!-- 2. Number Guessing Game Container -->
                 <div id="game-guess-pane" style="display:none; text-align:center;">
                     <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:10px; margin-bottom:15px;">
                         <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong> (Win <strong style="color:#059669;">$0.02</strong> if correct, $0.00 if wrong):</p>
@@ -89,7 +89,7 @@
                     <p id="guess-status" style="margin:0; font-size:12px; color:#64748b;"></p>
                 </div>
 
-                <!-- 3. Real Lucky Spinner Container (Rewards: 0.01, 0.00, 0.02, 0.03, 0.05, 0.00 with weighted chances) -->
+                <!-- 3. Real Lucky Spinner Container -->
                 <div id="game-spin-pane" style="display:none; text-align:center;">
                     <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:20px; border-radius:10px; margin-bottom:15px;">
                         <div id="spinner-display" style="width:100px; height:100px; margin:0 auto 12px auto; background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; box-shadow:0 4px 10px rgba(139,92,246,0.3);">
@@ -114,7 +114,7 @@
             </div>
         </div>
 
-        <!-- Profile View (Withdrawal Details section removed) -->
+        <!-- Profile View -->
         <div id="profile-view" style="display:none; background:white; padding:20px; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <h3 style="margin-top:0; color:#1e293b; font-size:18px;">Account Profile</h3>
             <p style="font-size:13px; color:#64748b; margin-bottom:20px;">Manage your account details and login credentials.</p>
@@ -143,7 +143,7 @@
     </div>
 </div>
 
-<!-- Withdrawal Modal Popup with Dynamic Method Info Display -->
+<!-- Withdrawal Modal Popup -->
 <div id="withdraw-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:9998;">
     <div style="background:white; padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:left; box-shadow:0 10px 25px rgba(0,0,0,0.15);">
         <h3 style="margin-top:0; color:#1e293b; font-size:18px; text-align:center;">Request Payout</h3>
@@ -162,7 +162,6 @@
             </select>
         </div>
 
-        <!-- Dynamic Info Box (Hidden until method chosen) -->
         <div id="method-info-box" style="display:none; background:#f8fafc; border:1px solid #e2e8f0; padding:10px; border-radius:8px; font-size:11px; color:#475569; margin-bottom:12px; line-height:1.5;">
             <div>• <strong>Minimum Limit:</strong> <span id="info-limit">$5.00</span></div>
             <div>• <strong>Withdrawal Method Fee:</strong> <span id="info-method-fee">0%</span></div>
@@ -178,7 +177,6 @@
             <input type="number" id="withdraw-amount" oninput="calculateWithdrawFee()" placeholder="Enter amount to withdraw ($)" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; box-sizing:border-box; font-size:14px; text-align:center;">
         </div>
 
-        <!-- Live Breakdown View inside Withdrawal Section -->
         <div style="background:#f1f5f9; padding:10px; border-radius:8px; font-size:12px; color:#334155; margin-bottom:15px; line-height:1.5;">
             <div>Requested Amount: <strong>$<span id="calc-requested">0.00</span></strong></div>
             <div>Method Fee: <strong style="color:#dc2626;">-$<span id="calc-method-fee">0.00</span></strong></div>
@@ -217,7 +215,6 @@
     let gameActive = false;
     const ADSTERRA_DIRECT_LINK = "https://www.effectivecpmnetwork.com/d2cwtcwg?key=315a2a65f103daae0647c8555ad0a203";
 
-    // Method specifications configuration object
     const methodSpecs = {
         "WebMoney WMT": { min: 5.00, methodFeePct: 0.02, methodFeeFlat: 0, desc: "Min. $5.00 | 2% Method Fee | 1-2 Days" },
         "WebMoney WMZ": { min: 5.00, methodFeePct: 0.01, methodFeeFlat: 0, desc: "Min. $5.00 | 1% Method Fee | 1-2 Days" },
@@ -439,7 +436,7 @@
         runRewardCountdown(statusText, startBtn, instructions, "Play Another Round", "Click to earn more!", 0.001);
     }
 
-    // 2. Number Guessing Game Logic (100% win rate: ad on submit, $0.02 if correct, $0.00 if wrong)
+    // 2. Number Guessing Game Logic
     function submitGuess() {
         const val = parseInt(document.getElementById('guess-input').value);
         const guessStatus = document.getElementById('guess-status');
@@ -450,7 +447,6 @@
             return;
         }
 
-        // Trigger ad immediately on submit button click
         window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
 
         let secret = Math.floor(Math.random() * 5) + 1;
@@ -464,7 +460,7 @@
         }
     }
 
-    // 3. Real Lucky Spinner Game Logic with weighted distribution (Rewards: 0.01, 0.00, 0.02, 0.03, 0.05, 0.00)
+    // 3. Real Lucky Spinner Game Logic
     function startRealSpinner() {
         const spinBtn = document.getElementById('spin-btn');
         const spinStatus = document.getElementById('spin-status');
@@ -487,7 +483,6 @@
     }
 
     function finalizeSpinResult(spinBtn, spinStatus, spinnerText) {
-        // Weighted probability logic: Higher chance for 0.00 and 0.01, lower chance for 0.05
         const pool = [
             0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
             0.01, 0.01, 0.01, 0.01, 0.01, 0.01,
@@ -499,11 +494,10 @@
         let selectedReward = pool[Math.floor(Math.random() * pool.length)];
         spinnerText.innerText = "$" + selectedReward.toFixed(2);
 
-        // Open sponsor ad on spin completion
         window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
 
         if (selectedReward > 0) {
-            spinStatus.innerText = `Congratulations! You won $${selectedReward.toFixed(2)}. Opening sponsor ad...`;
+            spinStatus.innerText = `Congratulations! You won $${selectedReward.toFixed(2)}.`;
             spinStatus.style.color = "#059669";
             runRewardCountdown(spinStatus, spinBtn, null, "Spin Again", "Spin completed!", selectedReward);
         } else {
@@ -514,7 +508,6 @@
         }
     }
 
-    // Universal reward execution helper after opening ad
     function runRewardCountdown(statusElement, buttonElement, instructionElement, btnText, instText, rewardVal) {
         let countdown = 5;
         let rewardTimer = setInterval(async () => {
@@ -605,7 +598,6 @@
         document.getElementById('withdraw-modal').style.display = 'none';
     }
 
-    // Show method-specific limits and fees dynamically after user chooses method option
     function onWithdrawMethodChange() {
         const method = document.getElementById('withdraw-method').value;
         const infoBox = document.getElementById('method-info-box');
@@ -686,7 +678,7 @@
         let methodFee = spec.methodFeePct > 0 ? (amount * spec.methodFeePct) : spec.methodFeeFlat;
         let websiteFee = amount * 0.05;
         let netPayout = amount - methodFee - websiteFee;
-        let totalDeduction = amount; // Full requested amount deducted from user balance
+        let totalDeduction = amount;
 
         try {
             await db.collection("withdrawals").add({
