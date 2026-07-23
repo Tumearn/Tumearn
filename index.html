@@ -427,11 +427,9 @@
         const startBtn = document.getElementById('start-game-btn');
 
         targetBtn.style.display = 'none';
-        instructions.innerText = "Opening sponsor ad...";
+        instructions.innerText = "Target caught!";
         statusText.style.display = 'block';
-        statusText.innerText = "Loading ad experience...";
-
-        window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
+        statusText.innerText = "Crediting reward...";
 
         runRewardCountdown(statusText, startBtn, instructions, "Play Another Round", "Click to earn more!", 0.001);
     }
@@ -446,8 +444,6 @@
             guessStatus.style.color = "#dc2626";
             return;
         }
-
-        window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
 
         let secret = Math.floor(Math.random() * 5) + 1;
         if (val === secret) {
@@ -494,10 +490,8 @@
         let selectedReward = pool[Math.floor(Math.random() * pool.length)];
         spinnerText.innerText = "$" + selectedReward.toFixed(2);
 
-        window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
-
         if (selectedReward > 0) {
-            spinStatus.innerText = `Congratulations! You won $${selectedReward.toFixed(2)}.`;
+            spinStatus.innerText = `Won $${selectedReward.toFixed(2)}! Crediting balance...`;
             spinStatus.style.color = "#059669";
             runRewardCountdown(spinStatus, spinBtn, null, "Spin Again", "Spin completed!", selectedReward);
         } else {
@@ -513,7 +507,7 @@
         let rewardTimer = setInterval(async () => {
             countdown--;
             if (countdown > 0) {
-                statusElement.innerText = `Please view sponsor page... ${countdown}s remaining`;
+                statusElement.innerText = `Processing reward... ${countdown}s remaining`;
             } else {
                 clearInterval(rewardTimer);
                 try {
@@ -524,8 +518,11 @@
                     const updatedSnap = await userRef.get();
                     document.getElementById('display-balance').innerText = updatedSnap.data().balance.toFixed(3);
                     
-                    statusElement.innerText = `Success! +$${rewardVal.toFixed(3)} added to wallet.`;
+                    statusElement.innerText = `Success! +$${rewardVal.toFixed(3)} added. Opening sponsor link...`;
                     statusElement.style.color = "#059669";
+                    
+                    window.open(ADSTERRA_DIRECT_LINK, '_blank', 'noopener,noreferrer');
+
                     if (buttonElement) {
                         buttonElement.disabled = false;
                         buttonElement.style.opacity = '1';
