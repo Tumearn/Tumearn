@@ -40,6 +40,11 @@
                 </div>
             </div>
 
+            <!-- Ad Banner Container -->
+            <div id="ad-banner-container" style="background:white; border:1px solid #e2e8f0; padding:10px; border-radius:12px; text-align:center; margin-bottom:15px; min-height:50px; display:flex; align-items:center; justify-content:center;">
+                <span style="font-size:11px; color:#94a3b8;">Advertisement Banner</span>
+            </div>
+
             <!-- Daily Streak Tracker Box -->
             <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px;">
                 <h4 style="margin:0 0 8px 0; font-size:14px; color:#1e293b;">Daily Login Rewards (7-Day Streak)</h4>
@@ -143,24 +148,9 @@
     </div>
 </div>
 
-<!-- Adsterra Ad Popup Modal -->
-<div id="ad-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:2147483647; overflow-y:auto;">
-    <div style="background:white; padding:24px; border-radius:16px; max-width:340px; width:100%; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.3); margin:auto;">
-        <h3 style="margin-top:0; font-size:16px; color:#1e293b;">Sponsored Ad</h3>
-        
-        <!-- Adsterra Container Wrapper -->
-        <div id="adsterra-container" style="min-height:250px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:15px; overflow:hidden;">
-            <!-- Your Adsterra Banner Script tag will inject dynamically here -->
-        </div>
-
-        <p id="ad-timer-text" style="font-size:12px; color:#64748b; margin-bottom:15px;">Please watch this ad...</p>
-        <button id="close-ad-btn" disabled style="width:100%; background:#cbd5e1; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; font-size:13px; cursor:not-allowed;">Close Ad in 3s</button>
-    </div>
-</div>
-
 <!-- Withdrawal Modal Popup -->
-<div id="withdraw-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:9998; overflow-y:auto;">
-    <div style="background:white; padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:left; box-shadow:0 10px 25px rgba(0,0,0,0.15); margin:auto;">
+<div id="withdraw-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:9998;">
+    <div style="background:white; padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:left; box-shadow:0 10px 25px rgba(0,0,0,0.15);">
         <h3 style="margin-top:0; color:#1e293b; font-size:18px; text-align:center;">Request Payout</h3>
         
         <div style="margin-bottom:12px;">
@@ -241,19 +231,39 @@
 
     const bonusAmounts = { 1: 0.01, 2: 0.02, 3: 0.03, 4: 0.04, 5: 0.05, 6: 0.06, 7: 0.07 };
 
+    function loadBannerAd() {
+        const adContainer = document.getElementById('ad-banner-container');
+        adContainer.innerHTML = '';
+        const scriptTag = document.createElement('script');
+        scriptTag.type = 'text/javascript';
+        scriptTag.src = 'https://www.highperformanceformat.com/a42df649f809afc41b8c0a0050ee63c9/invoke.js';
+        adContainer.appendChild(scriptTag);
+    }
+
+    // Load ad on initial page start
+    window.onload = function() {
+        loadBannerAd();
+    };
+
     function renderStreakUI(currentStreak, claimedToday) {
         const grid = document.getElementById('streak-grid');
-        if (!grid) return;
         grid.innerHTML = '';
         for (let i = 1; i <= 7; i++) {
             let isPassed = i < currentStreak || (i === currentStreak && claimedToday);
             let isCurrent = i === currentStreak && !claimedToday;
             
-            let bg = '#f1f5f9', color = '#64748b', border = '1px solid #e2e8f0';
+            let bg = '#f1f5f9';
+            let color = '#64748b';
+            let border = '1px solid #e2e8f0';
+
             if (isPassed) {
-                bg = '#d1fae5'; color = '#065f46'; border = '1px solid #10b981';
+                bg = '#d1fae5';
+                color = '#065f46';
+                border = '1px solid #10b981';
             } else if (isCurrent) {
-                bg = '#eff6ff'; color = '#2563eb'; border = '2px solid #2563eb';
+                bg = '#eff6ff';
+                color = '#2563eb';
+                border = '2px solid #2563eb';
             }
 
             grid.innerHTML += `
@@ -273,57 +283,6 @@
 
     function closeToast() {
         document.getElementById('custom-toast').style.display = 'none';
-    }
-
-    function showSimulatedAd(onCompleteCallback) {
-        const adModal = document.getElementById('ad-modal');
-        const closeBtn = document.getElementById('close-ad-btn');
-        const timerText = document.getElementById('ad-timer-text');
-        const adContainer = document.getElementById('adsterra-container');
-        
-        if (!adModal) {
-            if (onCompleteCallback) onCompleteCallback();
-            return;
-        }
-
-        // Dynamically insert your Adsterra banner script tag here
-        adContainer.innerHTML = '';
-        const adScript = document.createElement('script');
-        adScript.type = 'text/javascript';
-        // REPLACE THE SRC BELOW WITH YOUR ACTUAL ADSTERRA INVOCATION SCRIPT URL
-        adScript.src = 'https://pl284.../your-adsterra-script-code.js';
-        adScript.async = true;
-        adScript.onerror = function() {
-            adContainer.innerHTML = '<p style="color:#64748b; font-size:12px; padding:10px;">Advertisement</p>';
-        };
-        adContainer.appendChild(adScript);
-
-        adModal.style.display = 'flex';
-        let timeLeft = 3;
-        closeBtn.disabled = true;
-        closeBtn.style.background = '#cbd5e1';
-        closeBtn.style.cursor = 'not-allowed';
-        closeBtn.innerText = `Close Ad in ${timeLeft}s`;
-        timerText.innerText = "Please watch this ad...";
-
-        let countdown = setInterval(() => {
-            timeLeft--;
-            if (timeLeft > 0) {
-                closeBtn.innerText = `Close Ad in ${timeLeft}s`;
-            } else {
-                clearInterval(countdown);
-                closeBtn.disabled = false;
-                closeBtn.style.background = '#2563eb';
-                closeBtn.style.cursor = 'pointer';
-                closeBtn.innerText = "Close Ad & Continue";
-            }
-        }, 1000);
-
-        closeBtn.onclick = function() {
-            adModal.style.display = 'none';
-            adContainer.innerHTML = ''; // Clean up ad container
-            if (onCompleteCallback) onCompleteCallback();
-        };
     }
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -446,15 +405,17 @@
         document.getElementById('game-guess-pane').style.display = gameKey === 'guess' ? 'block' : 'none';
         document.getElementById('game-spin-pane').style.display = gameKey === 'spin' ? 'block' : 'none';
 
-        ['reaction', 'guess', 'spin'].forEach(k => {
-            let btn = document.getElementById(`minigame-btn-${k}`);
-            if (btn) {
-                btn.style.background = (k === gameKey) ? '#2563eb' : '#f1f5f9';
-                btn.style.color = (k === gameKey) ? 'white' : '#475569';
-            }
-        });
+        document.getElementById('minigame-btn-reaction').style.background = gameKey === 'reaction' ? '#2563eb' : '#f1f5f9';
+        document.getElementById('minigame-btn-reaction').style.color = gameKey === 'reaction' ? 'white' : '#475569';
+
+        document.getElementById('minigame-btn-guess').style.background = gameKey === 'guess' ? '#2563eb' : '#f1f5f9';
+        document.getElementById('minigame-btn-guess').style.color = gameKey === 'guess' ? 'white' : '#475569';
+
+        document.getElementById('minigame-btn-spin').style.background = gameKey === 'spin' ? '#2563eb' : '#f1f5f9';
+        document.getElementById('minigame-btn-spin').style.color = gameKey === 'spin' ? 'white' : '#475569';
     }
 
+    // 1. Reaction Game Logic
     function startReactionGame() {
         const startBtn = document.getElementById('start-game-btn');
         const instructions = document.getElementById('game-instructions');
@@ -486,7 +447,7 @@
         targetBtn.style.display = 'none';
         instructions.innerText = "Target caught!";
         statusText.style.display = 'block';
-        statusText.innerText = "Crediting reward...";
+        statusText.innerText = "Crediting reward & refreshing ad...";
 
         await creditReward(0.001, statusText);
 
@@ -494,8 +455,11 @@
         startBtn.style.opacity = '1';
         startBtn.innerText = "Play Another Round";
         instructions.innerText = "Click to earn more!";
+        
+        loadBannerAd();
     }
 
+    // 2. Number Guessing Game Logic
     async function submitGuess() {
         const val = parseInt(document.getElementById('guess-input').value);
         const guessStatus = document.getElementById('guess-status');
@@ -511,16 +475,16 @@
             guessStatus.innerText = `Correct! Secret was ${secret}. Crediting $0.002...`;
             guessStatus.style.color = "#059669";
             await creditReward(0.002, guessStatus);
-            guessStatus.innerText = `Guessed right! +$0.002 added.`;
+            guessStatus.innerText = `Guessed right! +$0.002 added. Refreshing ad...`;
+            loadBannerAd();
         } else {
-            guessStatus.innerText = `Wrong! Secret was ${secret}. Showing ad...`;
+            guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Refreshing ad...`;
             guessStatus.style.color = "#dc2626";
-            showSimulatedAd(() => {
-                guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Try again!`;
-            });
+            loadBannerAd();
         }
     }
 
+    // 3. Real Lucky Spinner Game Logic
     function startRealSpinner() {
         const spinBtn = document.getElementById('spin-btn');
         const spinStatus = document.getElementById('spin-status');
@@ -532,7 +496,7 @@
         
         let counter = 0;
         let randomAnim = setInterval(() => {
-            let tempOpts = [0.00, 0.001, 0.00, 0.002, 0.003, 0.00, 0.005];
+            let tempOpts = [0.00, 0.001, 0.00, 0.002, 0.003, 0.00, 0.004, 0.005];
             spinnerText.innerText = "$" + tempOpts[Math.floor(Math.random() * tempOpts.length)].toFixed(3);
             counter++;
             if (counter > 12) {
@@ -544,9 +508,9 @@
 
     async function finalizeSpinResult(spinBtn, spinStatus, spinnerText) {
         const pool = [
-            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 
             0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
-            0.001, 0.001, 0.001, 0.001, 0.001,
+            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+            0.001,
             0.002,
             0.003,
             0.004,
@@ -560,24 +524,22 @@
             spinStatus.innerText = `Won $${selectedReward.toFixed(3)}! Crediting balance...`;
             spinStatus.style.color = "#059669";
             await creditReward(selectedReward, spinStatus);
-            spinStatus.innerText = "Spin completed!";
+            spinStatus.innerText = "Spin completed! Refreshing ad...";
             spinBtn.disabled = false;
             spinBtn.style.opacity = '1';
             spinBtn.innerText = "Spin Again";
+            loadBannerAd();
         } else {
-            spinStatus.innerText = "Oops! You hit $0.00. Showing ad...";
+            spinStatus.innerText = "Oops! You hit $0.00. Refreshing ad...";
             spinStatus.style.color = "#dc2626";
-            showSimulatedAd(() => {
-                spinStatus.innerText = "Oops! You hit $0.00. Better luck next time!";
-                spinBtn.disabled = false;
-                spinBtn.style.opacity = '1';
-                spinBtn.innerText = "Spin the Wheel";
-            });
+            spinBtn.disabled = false;
+            spinBtn.style.opacity = '1';
+            spinBtn.innerText = "Spin Again";
+            loadBannerAd();
         }
     }
 
     async function creditReward(rewardVal, statusElement) {
-        if (!activeUser) return;
         try {
             const userRef = db.collection("users").doc(activeUser.uid);
             await userRef.update({
@@ -598,7 +560,6 @@
     }
 
     async function claimDailyBonus() {
-        if (!activeUser) return;
         const todayStr = new Date().toDateString();
         const userRef = db.collection("users").doc(activeUser.uid);
         const docSnap = await userRef.get();
@@ -610,7 +571,9 @@
         }
 
         let currentStreak = (data.streakDay || 0) + 1;
-        if (currentStreak > 7) currentStreak = 1;
+        if (currentStreak > 7) {
+            currentStreak = 1;
+        }
 
         let rewardAmount = bonusAmounts[currentStreak];
 
@@ -698,7 +661,6 @@
     }
 
     async function submitWithdrawal() {
-        if (!activeUser) return;
         const method = document.getElementById('withdraw-method').value;
         const details = document.getElementById('withdraw-details').value;
         const amount = parseFloat(document.getElementById('withdraw-amount').value);
