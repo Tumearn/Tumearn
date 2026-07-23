@@ -106,7 +106,7 @@
             <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px; text-align:center;">
                 <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">High-Paying Tasks</h3>
                 <p style="margin:0 0 12px 0; font-size:12px; color:#64748b;">Complete partner task link via Smartlink</p>
-                <a href="https://www.effectivecpmnetwork.com/e3uz5g0vih?key=32c475935219f115856188d83b249ded" target="_blank" onclick="creditTaskReward()" style="display:block; background:#2563eb; color:white; text-decoration:none; padding:12px; border-radius:10px; font-weight:bold; font-size:13px;">Claim Task Bonus ($0.05)</a>
+                <button onclick="openSmartTaskLink()" style="display:block; width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; font-size:13px; cursor:pointer;">Claim Task Bonus ($0.05)</button>
             </div>
 
             <!-- Embedded Adsterra Banner Ad Unit Section -->
@@ -343,6 +343,11 @@
             adModal.style.display = 'none';
             if (onCompleteCallback) onCompleteCallback();
         };
+    }
+
+    async function openSmartTaskLink() {
+        window.open("https://www.effectivecpmnetwork.com/e3uz5g0vih?key=32c475935219f115856188d83b249ded", "_blank");
+        await creditTaskReward();
     }
 
     async function creditTaskReward() {
