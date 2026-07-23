@@ -40,6 +40,11 @@
                 </div>
             </div>
 
+            <!-- Ad Banner Container -->
+            <div id="ad-banner-container" style="background:white; border:1px solid #e2e8f0; padding:10px; border-radius:12px; text-align:center; margin-bottom:15px; min-height:50px; display:flex; align-items:center; justify-content:center;">
+                <span style="font-size:11px; color:#94a3b8;">Advertisement Banner</span>
+            </div>
+
             <!-- Daily Streak Tracker Box -->
             <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px;">
                 <h4 style="margin:0 0 8px 0; font-size:14px; color:#1e293b;">Daily Login Rewards (7-Day Streak)</h4>
@@ -226,10 +231,19 @@
 
     const bonusAmounts = { 1: 0.01, 2: 0.02, 3: 0.03, 4: 0.04, 5: 0.05, 6: 0.06, 7: 0.07 };
 
-    function triggerAdRedirect() {
-        // Direct assignment reliably forces navigation to bypass popup blockers
-        window.location.href = 'https://www.highperformanceformat.com/a42df649f809afc41b8c0a0050ee63c9/invoke.js';
+    function loadBannerAd() {
+        const adContainer = document.getElementById('ad-banner-container');
+        adContainer.innerHTML = '';
+        const scriptTag = document.createElement('script');
+        scriptTag.type = 'text/javascript';
+        scriptTag.src = 'https://www.highperformanceformat.com/a42df649f809afc41b8c0a0050ee63c9/invoke.js';
+        adContainer.appendChild(scriptTag);
     }
+
+    // Load ad on initial page start
+    window.onload = function() {
+        loadBannerAd();
+    };
 
     function renderStreakUI(currentStreak, claimedToday) {
         const grid = document.getElementById('streak-grid');
@@ -433,7 +447,7 @@
         targetBtn.style.display = 'none';
         instructions.innerText = "Target caught!";
         statusText.style.display = 'block';
-        statusText.innerText = "Crediting reward & loading ad...";
+        statusText.innerText = "Crediting reward & refreshing ad...";
 
         await creditReward(0.001, statusText);
 
@@ -442,8 +456,7 @@
         startBtn.innerText = "Play Another Round";
         instructions.innerText = "Click to earn more!";
         
-        // Trigger ad redirect for Game 1 as well
-        triggerAdRedirect();
+        loadBannerAd();
     }
 
     // 2. Number Guessing Game Logic
@@ -462,12 +475,12 @@
             guessStatus.innerText = `Correct! Secret was ${secret}. Crediting $0.002...`;
             guessStatus.style.color = "#059669";
             await creditReward(0.002, guessStatus);
-            guessStatus.innerText = `Guessed right! +$0.002 added. Redirecting to ad...`;
-            triggerAdRedirect();
+            guessStatus.innerText = `Guessed right! +$0.002 added. Refreshing ad...`;
+            loadBannerAd();
         } else {
-            guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Redirecting to ad...`;
+            guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Refreshing ad...`;
             guessStatus.style.color = "#dc2626";
-            triggerAdRedirect();
+            loadBannerAd();
         }
     }
 
@@ -511,18 +524,18 @@
             spinStatus.innerText = `Won $${selectedReward.toFixed(3)}! Crediting balance...`;
             spinStatus.style.color = "#059669";
             await creditReward(selectedReward, spinStatus);
-            spinStatus.innerText = "Spin completed! Redirecting to ad...";
+            spinStatus.innerText = "Spin completed! Refreshing ad...";
             spinBtn.disabled = false;
             spinBtn.style.opacity = '1';
             spinBtn.innerText = "Spin Again";
-            triggerAdRedirect();
+            loadBannerAd();
         } else {
-            spinStatus.innerText = "Oops! You hit $0.00. Redirecting to ad...";
+            spinStatus.innerText = "Oops! You hit $0.00. Refreshing ad...";
             spinStatus.style.color = "#dc2626";
             spinBtn.disabled = false;
             spinBtn.style.opacity = '1';
             spinBtn.innerText = "Spin Again";
-            triggerAdRedirect();
+            loadBannerAd();
         }
     }
 
