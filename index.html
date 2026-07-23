@@ -40,11 +40,6 @@
                 </div>
             </div>
 
-            <!-- Ad Banner Container -->
-            <div id="ad-banner-container" style="background:white; border:1px solid #e2e8f0; padding:10px; border-radius:12px; text-align:center; margin-bottom:15px; min-height:50px; display:flex; align-items:center; justify-content:center;">
-                <span style="font-size:11px; color:#94a3b8;">Advertisement Banner</span>
-            </div>
-
             <!-- Daily Streak Tracker Box -->
             <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px;">
                 <h4 style="margin:0 0 8px 0; font-size:14px; color:#1e293b;">Daily Login Rewards (7-Day Streak)</h4>
@@ -148,6 +143,18 @@
     </div>
 </div>
 
+<!-- Simulated Ad Popup Modal -->
+<div id="ad-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:10000;">
+    <div style="background:white; padding:20px; border-radius:16px; max-width:320px; width:100%; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+        <h3 style="margin-top:0; font-size:16px; color:#1e293b;">Sponsored Ad</h3>
+        <div style="background:#e2e8f0; height:150px; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:15px; color:#64748b; font-weight:bold;">
+            [ Ad Content / Video Playing ]
+        </div>
+        <p id="ad-timer-text" style="font-size:12px; color:#64748b; margin-bottom:15px;">Please wait...</p>
+        <button id="close-ad-btn" disabled style="width:100%; background:#cbd5e1; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; font-size:13px; cursor:not-allowed;">Close Ad in 3s</button>
+    </div>
+</div>
+
 <!-- Withdrawal Modal Popup -->
 <div id="withdraw-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:9998;">
     <div style="background:white; padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:left; box-shadow:0 10px 25px rgba(0,0,0,0.15);">
@@ -231,20 +238,6 @@
 
     const bonusAmounts = { 1: 0.01, 2: 0.02, 3: 0.03, 4: 0.04, 5: 0.05, 6: 0.06, 7: 0.07 };
 
-    function loadBannerAd() {
-        const adContainer = document.getElementById('ad-banner-container');
-        adContainer.innerHTML = '';
-        const scriptTag = document.createElement('script');
-        scriptTag.type = 'text/javascript';
-        scriptTag.src = 'https://www.highperformanceformat.com/a42df649f809afc41b8c0a0050ee63c9/invoke.js';
-        adContainer.appendChild(scriptTag);
-    }
-
-    // Load ad on initial page start
-    window.onload = function() {
-        loadBannerAd();
-    };
-
     function renderStreakUI(currentStreak, claimedToday) {
         const grid = document.getElementById('streak-grid');
         grid.innerHTML = '';
@@ -283,6 +276,38 @@
 
     function closeToast() {
         document.getElementById('custom-toast').style.display = 'none';
+    }
+
+    function showSimulatedAd(onCompleteCallback) {
+        const adModal = document.getElementById('ad-modal');
+        const closeBtn = document.getElementById('close-ad-btn');
+        const timerText = document.getElementById('ad-timer-text');
+        
+        adModal.style.display = 'flex';
+        let timeLeft = 3;
+        closeBtn.disabled = true;
+        closeBtn.style.background = '#cbd5e1';
+        closeBtn.style.cursor = 'not-allowed';
+        closeBtn.innerText = `Close Ad in ${timeLeft}s`;
+        timerText.innerText = "Please watch this ad...";
+
+        let countdown = setInterval(() => {
+            timeLeft--;
+            if (timeLeft > 0) {
+                closeBtn.innerText = `Close Ad in ${timeLeft}s`;
+            } else {
+                clearInterval(countdown);
+                closeBtn.disabled = false;
+                closeBtn.style.background = '#2563eb';
+                closeBtn.style.cursor = 'pointer';
+                closeBtn.innerText = "Close Ad & Continue";
+            }
+        }, 1000);
+
+        closeBtn.onclick = function() {
+            adModal.style.display = 'none';
+            if (onCompleteCallback) onCompleteCallback();
+        };
     }
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -447,7 +472,7 @@
         targetBtn.style.display = 'none';
         instructions.innerText = "Target caught!";
         statusText.style.display = 'block';
-        statusText.innerText = "Crediting reward & refreshing ad...";
+        statusText.innerText = "Crediting reward...";
 
         await creditReward(0.001, statusText);
 
@@ -455,11 +480,9 @@
         startBtn.style.opacity = '1';
         startBtn.innerText = "Play Another Round";
         instructions.innerText = "Click to earn more!";
-        
-        loadBannerAd();
     }
 
-    // 2. Number Guessing Game Logic
+    // 2. Number Guessing Game Logic (Game 2)
     async function submitGuess() {
         const val = parseInt(document.getElementById('guess-input').value);
         const guessStatus = document.getElementById('guess-status');
@@ -475,16 +498,17 @@
             guessStatus.innerText = `Correct! Secret was ${secret}. Crediting $0.002...`;
             guessStatus.style.color = "#059669";
             await creditReward(0.002, guessStatus);
-            guessStatus.innerText = `Guessed right! +$0.002 added. Refreshing ad...`;
-            loadBannerAd();
+            guessStatus.innerText = `Guessed right! +$0.002 added.`;
         } else {
-            guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Refreshing ad...`;
+            guessStatus.innerText = `Wrong! Secret was ${secret}. Showing ad...`;
             guessStatus.style.color = "#dc2626";
-            loadBannerAd();
+            showSimulatedAd(() => {
+                guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Try again!`;
+            });
         }
     }
 
-    // 3. Real Lucky Spinner Game Logic
+    // 3. Real Lucky Spinner Game Logic (Game 3)
     function startRealSpinner() {
         const spinBtn = document.getElementById('spin-btn');
         const spinStatus = document.getElementById('spin-status');
@@ -496,7 +520,7 @@
         
         let counter = 0;
         let randomAnim = setInterval(() => {
-            let tempOpts = [0.00, 0.001, 0.00, 0.002, 0.003, 0.00, 0.004, 0.005];
+            let tempOpts = [0.00, 0.001, 0.00, 0.002, 0.003, 0.00, 0.005];
             spinnerText.innerText = "$" + tempOpts[Math.floor(Math.random() * tempOpts.length)].toFixed(3);
             counter++;
             if (counter > 12) {
@@ -507,10 +531,10 @@
     }
 
     async function finalizeSpinResult(spinBtn, spinStatus, spinnerText) {
+        // Increased chance of 0.00, decreased chances of higher values (0.002, 0.003, 0.004, 0.005)
         const pool = [
-            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
-            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
-            0.001,
+            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, // High weight for 0.00
+            0.001, 0.001, 0.001, 0.001,
             0.002,
             0.003,
             0.004,
@@ -524,18 +548,19 @@
             spinStatus.innerText = `Won $${selectedReward.toFixed(3)}! Crediting balance...`;
             spinStatus.style.color = "#059669";
             await creditReward(selectedReward, spinStatus);
-            spinStatus.innerText = "Spin completed! Refreshing ad...";
+            spinStatus.innerText = "Spin completed!";
             spinBtn.disabled = false;
             spinBtn.style.opacity = '1';
             spinBtn.innerText = "Spin Again";
-            loadBannerAd();
         } else {
-            spinStatus.innerText = "Oops! You hit $0.00. Refreshing ad...";
+            spinStatus.innerText = "Oops! You hit $0.00. Showing ad...";
             spinStatus.style.color = "#dc2626";
-            spinBtn.disabled = false;
-            spinBtn.style.opacity = '1';
-            spinBtn.innerText = "Spin Again";
-            loadBannerAd();
+            showSimulatedAd(() => {
+                spinStatus.innerText = "Oops! You hit $0.00. Better luck next time!";
+                spinBtn.disabled = false;
+                spinBtn.style.opacity = '1';
+                spinBtn.innerText = "Spin the Wheel";
+            });
         }
     }
 
