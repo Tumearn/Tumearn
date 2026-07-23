@@ -102,40 +102,44 @@
                 </div>
             </div>
 
-            <!-- Smart Link Action Section -->
-            <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px; text-align:center;">
-                <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">High-Paying Tasks</h3>
-                <p style="margin:0 0 12px 0; font-size:12px; color:#64748b;">Complete partner task link via Smartlink</p>
-                <button onclick="openSmartTaskLink()" style="display:block; width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; font-size:13px; cursor:pointer;">Claim Task Bonus ($0.05)</button>
-            </div>
+            <!-- Referral Subtab Content (Box moved up to top, Tasks moved down) -->
+            <div id="subtab-referral" style="display:none;">
+                <!-- 1. Invite Friends & Earn Box (Moved to Top) -->
+                <div style="background:white; border:1px solid #e2e8f0; padding:20px; border-radius:16px; margin-bottom:15px;">
+                    <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">Invite Friends & Earn</h3>
+                    <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Share your unique referral link. Earn a $0.05 bonus when your friend joins!</p>
+                    <div style="background:#f8fafc; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:12px; word-break:break-all; color:#334155; margin-bottom:10px;" id="ref-link-box">
+                        Generating link...
+                    </div>
+                    <button onclick="copyRefLink()" style="width:100%; background:#10b981; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Copy Referral Link</button>
+                    <p style="margin:15px 0 0 0; font-size:12px; color:#475569;">Total Referred Users: <strong id="ref-count">0</strong></p>
+                </div>
 
-            <!-- Embedded Adsterra Banner Ad Unit Section -->
-            <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px; text-align:center;">
-                <p style="margin:0 0 10px 0; font-size:11px; text-transform:uppercase; color:#94a3b8; font-weight:bold; letter-spacing:0.5px;">Sponsored Advertisement</p>
-                <div style="display:flex; justify-content:center; overflow:hidden; min-height:250px;">
-                    <script>
-                      atOptions = {
-                        'key' : '78856746e3616d10fdb44b55f326cd41',
-                        'format' : 'iframe',
-                        'height' : 250,
-                        'width' : 300,
-                        'params' : {}
-                      };
-                    </script>
-                    <script src="https://www.highperformanceformat.com/78856746e3616d10fdb44b55f326cd41/invoke.js"></script>
+                <!-- 2. Embedded Adsterra Banner Ad Unit Section -->
+                <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px; text-align:center;">
+                    <p style="margin:0 0 10px 0; font-size:11px; text-transform:uppercase; color:#94a3b8; font-weight:bold; letter-spacing:0.5px;">Sponsored Advertisement</p>
+                    <div style="display:flex; justify-content:center; overflow:hidden; min-height:250px;">
+                        <script>
+                          atOptions = {
+                            'key' : '78856746e3616d10fdb44b55f326cd41',
+                            'format' : 'iframe',
+                            'height' : 250,
+                            'width' : 300,
+                            'params' : {}
+                          };
+                        </script>
+                        <script src="https://www.highperformanceformat.com/78856746e3616d10fdb44b55f326cd41/invoke.js"></script>
+                    </div>
+                </div>
+
+                <!-- 3. Smart Link Action Section (Moved Down) -->
+                <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px; text-align:center;">
+                    <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">High-Paying Tasks</h3>
+                    <p style="margin:0 0 12px 0; font-size:12px; color:#64748b;">Complete partner task link via Smartlink</p>
+                    <button onclick="openSmartTaskLink()" style="display:block; width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; font-size:13px; cursor:pointer;">Claim Task Bonus ($0.005)</button>
                 </div>
             </div>
 
-            <!-- Referral Subtab Content -->
-            <div id="subtab-referral" style="display:none; background:white; border:1px solid #e2e8f0; padding:20px; border-radius:16px; margin-bottom:15px;">
-                <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">Invite Friends & Earn</h3>
-                <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Share your unique referral link. Earn a $0.05 bonus when your friend joins!</p>
-                <div style="background:#f8fafc; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:12px; word-break:break-all; color:#334155; margin-bottom:10px;" id="ref-link-box">
-                    Generating link...
-                </div>
-                <button onclick="copyRefLink()" style="width:100%; background:#10b981; color:white; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Copy Referral Link</button>
-                <p style="margin:15px 0 0 0; font-size:12px; color:#475569;">Total Referred Users: <strong id="ref-count">0</strong></p>
-            </div>
         </div>
 
         <!-- Profile View -->
@@ -351,7 +355,7 @@
     }
 
     async function creditTaskReward() {
-        await creditReward(0.05, null);
+        await creditReward(0.005, null);
     }
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -491,15 +495,19 @@
 
         startBtn.disabled = true;
         startBtn.style.opacity = '0.5';
-        instructions.innerText = "Get ready...";
+        instructions.innerText = "Loading ad...";
         statusText.style.display = 'none';
 
-        let randomDelay = Math.floor(Math.random() * 2000) + 1000;
-        setTimeout(() => {
-            instructions.innerText = "Catch it!";
-            targetBtn.style.display = 'inline-block';
-            gameActive = true;
-        }, randomDelay);
+        // Trigger ad before starting the reaction game
+        showSimulatedAd(() => {
+            instructions.innerText = "Get ready...";
+            let randomDelay = Math.floor(Math.random() * 2000) + 1000;
+            setTimeout(() => {
+                instructions.innerText = "Catch it!";
+                targetBtn.style.display = 'inline-block';
+                gameActive = true;
+            }, randomDelay);
+        });
     }
 
     async function hitReaction() {
