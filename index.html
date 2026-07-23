@@ -40,11 +40,6 @@
                 </div>
             </div>
 
-            <!-- Ad Banner Container -->
-            <div id="ad-banner-container" style="background:white; border:1px solid #e2e8f0; padding:10px; border-radius:12px; text-align:center; margin-bottom:15px; min-height:50px; display:flex; align-items:center; justify-content:center;">
-                <span style="font-size:11px; color:#94a3b8;">Advertisement Banner</span>
-            </div>
-
             <!-- Daily Streak Tracker Box -->
             <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px;">
                 <h4 style="margin:0 0 8px 0; font-size:14px; color:#1e293b;">Daily Login Rewards (7-Day Streak)</h4>
@@ -87,7 +82,7 @@
                 <!-- 2. Number Guessing Game Container -->
                 <div id="game-guess-pane" style="display:none; text-align:center;">
                     <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:10px; margin-bottom:15px;">
-                        <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong> (Win <strong style="color:#059669;">$0.002</strong> if correct, $0.00 if wrong):</p>
+                        <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong> (Win <strong style="color:#059669;">$0.02</strong> if correct, $0.00 if wrong):</p>
                         <input type="number" id="guess-input" min="1" max="5" placeholder="Enter number (1-5)" style="width:140px; padding:8px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; text-align:center; margin-bottom:10px;"><br>
                         <button onclick="submitGuess()" style="background:#10b981; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:12px;">Submit Guess</button>
                     </div>
@@ -100,7 +95,7 @@
                         <div id="spinner-display" style="width:100px; height:100px; margin:0 auto 12px auto; background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; box-shadow:0 4px 10px rgba(139,92,246,0.3);">
                             <span id="spinner-text">SPIN</span>
                         </div>
-                        <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Real wheel with weighted odds! Win $0.001, $0.002, $0.003, $0.004, $0.005, or $0.00.</p>
+                        <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Real wheel with weighted odds! Win $0.01, $0.02, $0.03, $0.05, or $0.00.</p>
                         <button id="spin-btn" onclick="startRealSpinner()" style="background:#8b5cf6; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Spin the Wheel</button>
                     </div>
                     <p id="spin-status" style="margin:0; font-size:12px; color:#64748b;"></p>
@@ -230,20 +225,6 @@
     };
 
     const bonusAmounts = { 1: 0.01, 2: 0.02, 3: 0.03, 4: 0.04, 5: 0.05, 6: 0.06, 7: 0.07 };
-
-    function loadBannerAd() {
-        const adContainer = document.getElementById('ad-banner-container');
-        adContainer.innerHTML = '';
-        const scriptTag = document.createElement('script');
-        scriptTag.type = 'text/javascript';
-        scriptTag.src = 'https://www.highperformanceformat.com/a42df649f809afc41b8c0a0050ee63c9/invoke.js';
-        adContainer.appendChild(scriptTag);
-    }
-
-    // Load ad on initial page start
-    window.onload = function() {
-        loadBannerAd();
-    };
 
     function renderStreakUI(currentStreak, claimedToday) {
         const grid = document.getElementById('streak-grid');
@@ -447,7 +428,7 @@
         targetBtn.style.display = 'none';
         instructions.innerText = "Target caught!";
         statusText.style.display = 'block';
-        statusText.innerText = "Crediting reward & refreshing ad...";
+        statusText.innerText = "Crediting reward...";
 
         await creditReward(0.001, statusText);
 
@@ -455,8 +436,6 @@
         startBtn.style.opacity = '1';
         startBtn.innerText = "Play Another Round";
         instructions.innerText = "Click to earn more!";
-        
-        loadBannerAd();
     }
 
     // 2. Number Guessing Game Logic
@@ -472,15 +451,13 @@
 
         let secret = Math.floor(Math.random() * 5) + 1;
         if (val === secret) {
-            guessStatus.innerText = `Correct! Secret was ${secret}. Crediting $0.002...`;
+            guessStatus.innerText = `Correct! Secret was ${secret}. Crediting $0.02...`;
             guessStatus.style.color = "#059669";
-            await creditReward(0.002, guessStatus);
-            guessStatus.innerText = `Guessed right! +$0.002 added. Refreshing ad...`;
-            loadBannerAd();
+            await creditReward(0.02, guessStatus);
+            guessStatus.innerText = `Guessed right! +$0.02 added.`;
         } else {
-            guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Refreshing ad...`;
+            guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Try again!`;
             guessStatus.style.color = "#dc2626";
-            loadBannerAd();
         }
     }
 
@@ -496,8 +473,8 @@
         
         let counter = 0;
         let randomAnim = setInterval(() => {
-            let tempOpts = [0.00, 0.001, 0.00, 0.002, 0.003, 0.00, 0.004, 0.005];
-            spinnerText.innerText = "$" + tempOpts[Math.floor(Math.random() * tempOpts.length)].toFixed(3);
+            let tempOpts = [0.00, 0.01, 0.00, 0.02, 0.03, 0.00, 0.05];
+            spinnerText.innerText = "$" + tempOpts[Math.floor(Math.random() * tempOpts.length)].toFixed(2);
             counter++;
             if (counter > 12) {
                 clearInterval(randomAnim);
@@ -508,34 +485,29 @@
 
     async function finalizeSpinResult(spinBtn, spinStatus, spinnerText) {
         const pool = [
-            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
-            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
-            0.001,
-            0.002,
-            0.003,
-            0.004,
-            0.005
+            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+            0.01, 0.01, 0.01, 0.01, 0.01, 0.01,
+            0.02, 0.02, 0.02,
+            0.03, 0.03,
+            0.05
         ];
 
         let selectedReward = pool[Math.floor(Math.random() * pool.length)];
-        spinnerText.innerText = "$" + selectedReward.toFixed(3);
+        spinnerText.innerText = "$" + selectedReward.toFixed(2);
 
         if (selectedReward > 0) {
-            spinStatus.innerText = `Won $${selectedReward.toFixed(3)}! Crediting balance...`;
+            spinStatus.innerText = `Won $${selectedReward.toFixed(2)}! Crediting balance...`;
             spinStatus.style.color = "#059669";
             await creditReward(selectedReward, spinStatus);
-            spinStatus.innerText = "Spin completed! Refreshing ad...";
+            spinStatus.innerText = "Spin completed!";
             spinBtn.disabled = false;
             spinBtn.style.opacity = '1';
             spinBtn.innerText = "Spin Again";
-            loadBannerAd();
         } else {
-            spinStatus.innerText = "Oops! You hit $0.00. Refreshing ad...";
+            spinStatus.innerText = "Oops! You hit $0.00. Better luck next time!";
             spinStatus.style.color = "#dc2626";
             spinBtn.disabled = false;
             spinBtn.style.opacity = '1';
-            spinBtn.innerText = "Spin Again";
-            loadBannerAd();
         }
     }
 
