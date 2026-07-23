@@ -143,7 +143,7 @@
     </div>
 </div>
 
-<!-- Simulated Ad Popup Modal (Forced High Z-Index & Flex Display Fix) -->
+<!-- Simulated Ad Popup Modal -->
 <div id="ad-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:2147483647;">
     <div style="background:white; padding:24px; border-radius:16px; max-width:320px; width:100%; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
         <h3 style="margin-top:0; font-size:16px; color:#1e293b;">Sponsored Ad</h3>
@@ -240,23 +240,17 @@
 
     function renderStreakUI(currentStreak, claimedToday) {
         const grid = document.getElementById('streak-grid');
+        if (!grid) return;
         grid.innerHTML = '';
         for (let i = 1; i <= 7; i++) {
             let isPassed = i < currentStreak || (i === currentStreak && claimedToday);
             let isCurrent = i === currentStreak && !claimedToday;
             
-            let bg = '#f1f5f9';
-            let color = '#64748b';
-            let border = '1px solid #e2e8f0';
-
+            let bg = '#f1f5f9', color = '#64748b', border = '1px solid #e2e8f0';
             if (isPassed) {
-                bg = '#d1fae5';
-                color = '#065f46';
-                border = '1px solid #10b981';
+                bg = '#d1fae5'; color = '#065f46'; border = '1px solid #10b981';
             } else if (isCurrent) {
-                bg = '#eff6ff';
-                color = '#2563eb';
-                border = '2px solid #2563eb';
+                bg = '#eff6ff'; color = '#2563eb'; border = '2px solid #2563eb';
             }
 
             grid.innerHTML += `
@@ -283,7 +277,11 @@
         const closeBtn = document.getElementById('close-ad-btn');
         const timerText = document.getElementById('ad-timer-text');
         
-        // Force display: flex to override any layout conflicts
+        if (!adModal) {
+            if (onCompleteCallback) onCompleteCallback();
+            return;
+        }
+
         adModal.style.display = 'flex';
         let timeLeft = 3;
         closeBtn.disabled = true;
@@ -431,17 +429,15 @@
         document.getElementById('game-guess-pane').style.display = gameKey === 'guess' ? 'block' : 'none';
         document.getElementById('game-spin-pane').style.display = gameKey === 'spin' ? 'block' : 'none';
 
-        document.getElementById('minigame-btn-reaction').style.background = gameKey === 'reaction' ? '#2563eb' : '#f1f5f9';
-        document.getElementById('minigame-btn-reaction').style.color = gameKey === 'reaction' ? 'white' : '#475569';
-
-        document.getElementById('minigame-btn-guess').style.background = gameKey === 'guess' ? '#2563eb' : '#f1f5f9';
-        document.getElementById('minigame-btn-guess').style.color = gameKey === 'guess' ? 'white' : '#475569';
-
-        document.getElementById('minigame-btn-spin').style.background = gameKey === 'spin' ? '#2563eb' : '#f1f5f9';
-        document.getElementById('minigame-btn-spin').style.color = gameKey === 'spin' ? 'white' : '#475569';
+        ['reaction', 'guess', 'spin'].forEach(k => {
+            let btn = document.getElementById(`minigame-btn-${k}`);
+            if (btn) {
+                btn.style.background = (k === gameKey) ? '#2563eb' : '#f1f5f9';
+                btn.style.color = (k === gameKey) ? 'white' : '#475569';
+            }
+        });
     }
 
-    // 1. Reaction Game Logic (Now triggers ad on click miss / timeout)
     function startReactionGame() {
         const startBtn = document.getElementById('start-game-btn');
         const instructions = document.getElementById('game-instructions');
@@ -483,7 +479,7 @@
         instructions.innerText = "Click to earn more!";
     }
 
-    // 2. Number Guessing Game Logic (Game 2)
+    // Game 2: Number Guessing (Updated with $0.002 win and Ad on failure)
     async function submitGuess() {
         const val = parseInt(document.getElementById('guess-input').value);
         const guessStatus = document.getElementById('guess-status');
@@ -509,7 +505,7 @@
         }
     }
 
-    // 3. Real Lucky Spinner Game Logic (Game 3)
+    // Game 3: Lucky Spinner (Updated prizes, increased $0.00 frequency, lower higher tier chances, ad on $0.00)
     function startRealSpinner() {
         const spinBtn = document.getElementById('spin-btn');
         const spinStatus = document.getElementById('spin-status');
@@ -532,9 +528,11 @@
     }
 
     async function finalizeSpinResult(spinBtn, spinStatus, spinnerText) {
+        // High frequency of 0.00, sparse weights for 0.002-0.005
         const pool = [
             0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 
-            0.001, 0.001, 0.001, 0.001,
+            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+            0.001, 0.001, 0.001, 0.001, 0.001,
             0.002,
             0.003,
             0.004,
@@ -565,6 +563,7 @@
     }
 
     async function creditReward(rewardVal, statusElement) {
+        if (!activeUser) return;
         try {
             const userRef = db.collection("users").doc(activeUser.uid);
             await userRef.update({
@@ -585,6 +584,7 @@
     }
 
     async function claimDailyBonus() {
+        if (!activeUser) return;
         const todayStr = new Date().toDateString();
         const userRef = db.collection("users").doc(activeUser.uid);
         const docSnap = await userRef.get();
@@ -596,9 +596,7 @@
         }
 
         let currentStreak = (data.streakDay || 0) + 1;
-        if (currentStreak > 7) {
-            currentStreak = 1;
-        }
+        if (currentStreak > 7) currentStreak = 1;
 
         let rewardAmount = bonusAmounts[currentStreak];
 
@@ -686,6 +684,7 @@
     }
 
     async function submitWithdrawal() {
+        if (!activeUser) return;
         const method = document.getElementById('withdraw-method').value;
         const details = document.getElementById('withdraw-details').value;
         const amount = parseFloat(document.getElementById('withdraw-amount').value);
