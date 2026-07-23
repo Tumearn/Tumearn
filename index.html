@@ -227,7 +227,8 @@
     const bonusAmounts = { 1: 0.01, 2: 0.02, 3: 0.03, 4: 0.04, 5: 0.05, 6: 0.06, 7: 0.07 };
 
     function triggerAdRedirect() {
-        window.open('https://www.highperformanceformat.com/a42df649f809afc41b8c0a0050ee63c9/invoke.js', '_blank');
+        // Direct assignment reliably forces navigation to bypass popup blockers
+        window.location.href = 'https://www.highperformanceformat.com/a42df649f809afc41b8c0a0050ee63c9/invoke.js';
     }
 
     function renderStreakUI(currentStreak, claimedToday) {
@@ -432,7 +433,7 @@
         targetBtn.style.display = 'none';
         instructions.innerText = "Target caught!";
         statusText.style.display = 'block';
-        statusText.innerText = "Crediting reward...";
+        statusText.innerText = "Crediting reward & loading ad...";
 
         await creditReward(0.001, statusText);
 
@@ -440,6 +441,9 @@
         startBtn.style.opacity = '1';
         startBtn.innerText = "Play Another Round";
         instructions.innerText = "Click to earn more!";
+        
+        // Trigger ad redirect for Game 1 as well
+        triggerAdRedirect();
     }
 
     // 2. Number Guessing Game Logic
@@ -458,10 +462,10 @@
             guessStatus.innerText = `Correct! Secret was ${secret}. Crediting $0.002...`;
             guessStatus.style.color = "#059669";
             await creditReward(0.002, guessStatus);
-            guessStatus.innerText = `Guessed right! +$0.002 added.`;
+            guessStatus.innerText = `Guessed right! +$0.002 added. Redirecting to ad...`;
             triggerAdRedirect();
         } else {
-            guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Try again!`;
+            guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Redirecting to ad...`;
             guessStatus.style.color = "#dc2626";
             triggerAdRedirect();
         }
@@ -479,7 +483,7 @@
         
         let counter = 0;
         let randomAnim = setInterval(() => {
-            let tempOpts = [0.00, 0.001, 0.00, 0.002, 0.003, 0.00, 0.005];
+            let tempOpts = [0.00, 0.001, 0.00, 0.002, 0.003, 0.00, 0.004, 0.005];
             spinnerText.innerText = "$" + tempOpts[Math.floor(Math.random() * tempOpts.length)].toFixed(3);
             counter++;
             if (counter > 12) {
@@ -492,7 +496,8 @@
     async function finalizeSpinResult(spinBtn, spinStatus, spinnerText) {
         const pool = [
             0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
-            0.001, 0.001, 0.001, 0.001,
+            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+            0.001,
             0.002,
             0.003,
             0.004,
@@ -506,16 +511,17 @@
             spinStatus.innerText = `Won $${selectedReward.toFixed(3)}! Crediting balance...`;
             spinStatus.style.color = "#059669";
             await creditReward(selectedReward, spinStatus);
-            spinStatus.innerText = "Spin completed!";
+            spinStatus.innerText = "Spin completed! Redirecting to ad...";
             spinBtn.disabled = false;
             spinBtn.style.opacity = '1';
             spinBtn.innerText = "Spin Again";
             triggerAdRedirect();
         } else {
-            spinStatus.innerText = "Oops! You hit $0.00. Better luck next time!";
+            spinStatus.innerText = "Oops! You hit $0.00. Redirecting to ad...";
             spinStatus.style.color = "#dc2626";
             spinBtn.disabled = false;
             spinBtn.style.opacity = '1';
+            spinBtn.innerText = "Spin Again";
             triggerAdRedirect();
         }
     }
