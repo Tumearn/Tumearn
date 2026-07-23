@@ -56,7 +56,7 @@
             </div>
 
             <!-- Game Subtab Content (Multiple Mini-Games) -->
-            <div id="subtab-game" style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px;">
+            <div id="subtab-game" style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px;">
                 <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b; text-align:center;">Select Mini-Game</h3>
                 <p style="margin:0 0 15px 0; font-size:12px; color:#64748b; text-align:center;">Play games & earn rewards!</p>
 
@@ -82,7 +82,7 @@
                 <!-- 2. Number Guessing Game Container -->
                 <div id="game-guess-pane" style="display:none; text-align:center;">
                     <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:10px; margin-bottom:15px;">
-                        <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong> (Win <strong style="color:#059669;">$0.02</strong> if correct, $0.00 if wrong):</p>
+                        <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong> (Win <strong style="color:#059669;">$0.002</strong> if correct, $0.00 if wrong):</p>
                         <input type="number" id="guess-input" min="1" max="5" placeholder="Enter number (1-5)" style="width:140px; padding:8px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; text-align:center; margin-bottom:10px;"><br>
                         <button onclick="submitGuess()" style="background:#10b981; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:12px;">Submit Guess</button>
                     </div>
@@ -95,15 +95,39 @@
                         <div id="spinner-display" style="width:100px; height:100px; margin:0 auto 12px auto; background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; box-shadow:0 4px 10px rgba(139,92,246,0.3);">
                             <span id="spinner-text">SPIN</span>
                         </div>
-                        <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Real wheel with weighted odds! Win $0.01, $0.02, $0.03, $0.05, or $0.00.</p>
+                        <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Real wheel with weighted odds! Win $0.001, $0.002, $0.003, $0.004, $0.005, or $0.00.</p>
                         <button id="spin-btn" onclick="startRealSpinner()" style="background:#8b5cf6; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Spin the Wheel</button>
                     </div>
                     <p id="spin-status" style="margin:0; font-size:12px; color:#64748b;"></p>
                 </div>
             </div>
 
+            <!-- Smart Link Action Section -->
+            <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px; text-align:center;">
+                <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">High-Paying Tasks</h3>
+                <p style="margin:0 0 12px 0; font-size:12px; color:#64748b;">Complete partner task link via Smartlink</p>
+                <a href="https://www.effectivecpmnetwork.com/e3uz5g0vih?key=32c475935219f115856188d83b249ded" target="_blank" onclick="creditTaskReward()" style="display:block; background:#2563eb; color:white; text-decoration:none; padding:12px; border-radius:10px; font-weight:bold; font-size:13px;">Claim Task Bonus ($0.05)</a>
+            </div>
+
+            <!-- Embedded Adsterra Banner Ad Unit Section -->
+            <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px; text-align:center;">
+                <p style="margin:0 0 10px 0; font-size:11px; text-transform:uppercase; color:#94a3b8; font-weight:bold; letter-spacing:0.5px;">Sponsored Advertisement</p>
+                <div style="display:flex; justify-content:center; overflow:hidden; min-height:250px;">
+                    <script>
+                      atOptions = {
+                        'key' : '78856746e3616d10fdb44b55f326cd41',
+                        'format' : 'iframe',
+                        'height' : 250,
+                        'width' : 300,
+                        'params' : {}
+                      };
+                    </script>
+                    <script src="https://www.highperformanceformat.com/78856746e3616d10fdb44b55f326cd41/invoke.js"></script>
+                </div>
+            </div>
+
             <!-- Referral Subtab Content -->
-            <div id="subtab-referral" style="display:none; background:white; border:1px solid #e2e8f0; padding:20px; border-radius:16px;">
+            <div id="subtab-referral" style="display:none; background:white; border:1px solid #e2e8f0; padding:20px; border-radius:16px; margin-bottom:15px;">
                 <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">Invite Friends & Earn</h3>
                 <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Share your unique referral link. Earn a $0.05 bonus when your friend joins!</p>
                 <div style="background:#f8fafc; padding:10px; border:1px solid #cbd5e1; border-radius:8px; font-size:12px; word-break:break-all; color:#334155; margin-bottom:10px;" id="ref-link-box">
@@ -143,9 +167,30 @@
     </div>
 </div>
 
+<!-- Adsterra Ad Popup Modal (Fallback/Intermittent Popup) -->
+<div id="ad-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:2147483647; overflow-y:auto;">
+    <div style="background:white; padding:24px; border-radius:16px; max-width:340px; width:100%; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.3); margin:auto;">
+        <h3 style="margin-top:0; font-size:16px; color:#1e293b;">Sponsored Ad</h3>
+        <div id="adsterra-container" style="min-height:250px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:15px; overflow:hidden;">
+            <script>
+              atOptions = {
+                'key' : '78856746e3616d10fdb44b55f326cd41',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+              };
+            </script>
+            <script src="https://www.highperformanceformat.com/78856746e3616d10fdb44b55f326cd41/invoke.js"></script>
+        </div>
+        <p id="ad-timer-text" style="font-size:12px; color:#64748b; margin-bottom:15px;">Please watch this ad...</p>
+        <button id="close-ad-btn" disabled style="width:100%; background:#cbd5e1; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; font-size:13px; cursor:not-allowed;">Close Ad in 3s</button>
+    </div>
+</div>
+
 <!-- Withdrawal Modal Popup -->
-<div id="withdraw-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:9998;">
-    <div style="background:white; padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:left; box-shadow:0 10px 25px rgba(0,0,0,0.15);">
+<div id="withdraw-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:9998; overflow-y:auto;">
+    <div style="background:white; padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:left; box-shadow:0 10px 25px rgba(0,0,0,0.15); margin:auto;">
         <h3 style="margin-top:0; color:#1e293b; font-size:18px; text-align:center;">Request Payout</h3>
         
         <div style="margin-bottom:12px;">
@@ -196,6 +241,9 @@
 <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
 
+<!-- Social Bar Script Integration -->
+<script src="https://pl30498283.effectivecpmnetwork.com/c0/d5/16/c0d51645d751c6c74bbddf7659e69369.js"></script>
+
 <script>
     const firebaseConfig = {
         apiKey: "AIzaSyDrx7lN3KzdFx-Wnf1Q5ycl6mDL_TNYG7w",
@@ -228,23 +276,17 @@
 
     function renderStreakUI(currentStreak, claimedToday) {
         const grid = document.getElementById('streak-grid');
+        if (!grid) return;
         grid.innerHTML = '';
         for (let i = 1; i <= 7; i++) {
             let isPassed = i < currentStreak || (i === currentStreak && claimedToday);
             let isCurrent = i === currentStreak && !claimedToday;
             
-            let bg = '#f1f5f9';
-            let color = '#64748b';
-            let border = '1px solid #e2e8f0';
-
+            let bg = '#f1f5f9', color = '#64748b', border = '1px solid #e2e8f0';
             if (isPassed) {
-                bg = '#d1fae5';
-                color = '#065f46';
-                border = '1px solid #10b981';
+                bg = '#d1fae5'; color = '#065f46'; border = '1px solid #10b981';
             } else if (isCurrent) {
-                bg = '#eff6ff';
-                color = '#2563eb';
-                border = '2px solid #2563eb';
+                bg = '#eff6ff'; color = '#2563eb'; border = '2px solid #2563eb';
             }
 
             grid.innerHTML += `
@@ -264,6 +306,47 @@
 
     function closeToast() {
         document.getElementById('custom-toast').style.display = 'none';
+    }
+
+    function showSimulatedAd(onCompleteCallback) {
+        const adModal = document.getElementById('ad-modal');
+        const closeBtn = document.getElementById('close-ad-btn');
+        const timerText = document.getElementById('ad-timer-text');
+        
+        if (!adModal) {
+            if (onCompleteCallback) onCompleteCallback();
+            return;
+        }
+
+        adModal.style.display = 'flex';
+        let timeLeft = 3;
+        closeBtn.disabled = true;
+        closeBtn.style.background = '#cbd5e1';
+        closeBtn.style.cursor = 'not-allowed';
+        closeBtn.innerText = `Close Ad in ${timeLeft}s`;
+        timerText.innerText = "Please watch this ad...";
+
+        let countdown = setInterval(() => {
+            timeLeft--;
+            if (timeLeft > 0) {
+                closeBtn.innerText = `Close Ad in ${timeLeft}s`;
+            } else {
+                clearInterval(countdown);
+                closeBtn.disabled = false;
+                closeBtn.style.background = '#2563eb';
+                closeBtn.style.cursor = 'pointer';
+                closeBtn.innerText = "Close Ad & Continue";
+            }
+        }, 1000);
+
+        closeBtn.onclick = function() {
+            adModal.style.display = 'none';
+            if (onCompleteCallback) onCompleteCallback();
+        };
+    }
+
+    async function creditTaskReward() {
+        await creditReward(0.05, null);
     }
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -386,17 +469,15 @@
         document.getElementById('game-guess-pane').style.display = gameKey === 'guess' ? 'block' : 'none';
         document.getElementById('game-spin-pane').style.display = gameKey === 'spin' ? 'block' : 'none';
 
-        document.getElementById('minigame-btn-reaction').style.background = gameKey === 'reaction' ? '#2563eb' : '#f1f5f9';
-        document.getElementById('minigame-btn-reaction').style.color = gameKey === 'reaction' ? 'white' : '#475569';
-
-        document.getElementById('minigame-btn-guess').style.background = gameKey === 'guess' ? '#2563eb' : '#f1f5f9';
-        document.getElementById('minigame-btn-guess').style.color = gameKey === 'guess' ? 'white' : '#475569';
-
-        document.getElementById('minigame-btn-spin').style.background = gameKey === 'spin' ? '#2563eb' : '#f1f5f9';
-        document.getElementById('minigame-btn-spin').style.color = gameKey === 'spin' ? 'white' : '#475569';
+        ['reaction', 'guess', 'spin'].forEach(k => {
+            let btn = document.getElementById(`minigame-btn-${k}`);
+            if (btn) {
+                btn.style.background = (k === gameKey) ? '#2563eb' : '#f1f5f9';
+                btn.style.color = (k === gameKey) ? 'white' : '#475569';
+            }
+        });
     }
 
-    // 1. Reaction Game Logic
     function startReactionGame() {
         const startBtn = document.getElementById('start-game-btn');
         const instructions = document.getElementById('game-instructions');
@@ -438,7 +519,6 @@
         instructions.innerText = "Click to earn more!";
     }
 
-    // 2. Number Guessing Game Logic
     async function submitGuess() {
         const val = parseInt(document.getElementById('guess-input').value);
         const guessStatus = document.getElementById('guess-status');
@@ -451,17 +531,19 @@
 
         let secret = Math.floor(Math.random() * 5) + 1;
         if (val === secret) {
-            guessStatus.innerText = `Correct! Secret was ${secret}. Crediting $0.02...`;
+            guessStatus.innerText = `Correct! Secret was ${secret}. Crediting $0.002...`;
             guessStatus.style.color = "#059669";
-            await creditReward(0.02, guessStatus);
-            guessStatus.innerText = `Guessed right! +$0.02 added.`;
+            await creditReward(0.002, guessStatus);
+            guessStatus.innerText = `Guessed right! +$0.002 added.`;
         } else {
-            guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Try again!`;
+            guessStatus.innerText = `Wrong! Secret was ${secret}. Showing ad...`;
             guessStatus.style.color = "#dc2626";
+            showSimulatedAd(() => {
+                guessStatus.innerText = `Wrong! Secret was ${secret}. $0.00 reward this round. Try again!`;
+            });
         }
     }
 
-    // 3. Real Lucky Spinner Game Logic
     function startRealSpinner() {
         const spinBtn = document.getElementById('spin-btn');
         const spinStatus = document.getElementById('spin-status');
@@ -473,8 +555,8 @@
         
         let counter = 0;
         let randomAnim = setInterval(() => {
-            let tempOpts = [0.00, 0.01, 0.00, 0.02, 0.03, 0.00, 0.05];
-            spinnerText.innerText = "$" + tempOpts[Math.floor(Math.random() * tempOpts.length)].toFixed(2);
+            let tempOpts = [0.00, 0.001, 0.00, 0.002, 0.003, 0.00, 0.005];
+            spinnerText.innerText = "$" + tempOpts[Math.floor(Math.random() * tempOpts.length)].toFixed(3);
             counter++;
             if (counter > 12) {
                 clearInterval(randomAnim);
@@ -485,18 +567,20 @@
 
     async function finalizeSpinResult(spinBtn, spinStatus, spinnerText) {
         const pool = [
-            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
-            0.01, 0.01, 0.01, 0.01, 0.01, 0.01,
-            0.02, 0.02, 0.02,
-            0.03, 0.03,
-            0.05
+            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 
+            0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+            0.001, 0.001, 0.001, 0.001, 0.001,
+            0.002,
+            0.003,
+            0.004,
+            0.005
         ];
 
         let selectedReward = pool[Math.floor(Math.random() * pool.length)];
-        spinnerText.innerText = "$" + selectedReward.toFixed(2);
+        spinnerText.innerText = "$" + selectedReward.toFixed(3);
 
         if (selectedReward > 0) {
-            spinStatus.innerText = `Won $${selectedReward.toFixed(2)}! Crediting balance...`;
+            spinStatus.innerText = `Won $${selectedReward.toFixed(3)}! Crediting balance...`;
             spinStatus.style.color = "#059669";
             await creditReward(selectedReward, spinStatus);
             spinStatus.innerText = "Spin completed!";
@@ -504,14 +588,19 @@
             spinBtn.style.opacity = '1';
             spinBtn.innerText = "Spin Again";
         } else {
-            spinStatus.innerText = "Oops! You hit $0.00. Better luck next time!";
+            spinStatus.innerText = "Oops! You hit $0.00. Showing ad...";
             spinStatus.style.color = "#dc2626";
-            spinBtn.disabled = false;
-            spinBtn.style.opacity = '1';
+            showSimulatedAd(() => {
+                spinStatus.innerText = "Oops! You hit $0.00. Better luck next time!";
+                spinBtn.disabled = false;
+                spinBtn.style.opacity = '1';
+                spinBtn.innerText = "Spin the Wheel";
+            });
         }
     }
 
     async function creditReward(rewardVal, statusElement) {
+        if (!activeUser) return;
         try {
             const userRef = db.collection("users").doc(activeUser.uid);
             await userRef.update({
@@ -532,6 +621,7 @@
     }
 
     async function claimDailyBonus() {
+        if (!activeUser) return;
         const todayStr = new Date().toDateString();
         const userRef = db.collection("users").doc(activeUser.uid);
         const docSnap = await userRef.get();
@@ -543,9 +633,7 @@
         }
 
         let currentStreak = (data.streakDay || 0) + 1;
-        if (currentStreak > 7) {
-            currentStreak = 1;
-        }
+        if (currentStreak > 7) currentStreak = 1;
 
         let rewardAmount = bonusAmounts[currentStreak];
 
@@ -633,6 +721,7 @@
     }
 
     async function submitWithdrawal() {
+        if (!activeUser) return;
         const method = document.getElementById('withdraw-method').value;
         const details = document.getElementById('withdraw-details').value;
         const amount = parseFloat(document.getElementById('withdraw-amount').value);
