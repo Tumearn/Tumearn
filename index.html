@@ -143,21 +143,24 @@
     </div>
 </div>
 
-<!-- Simulated Ad Popup Modal -->
-<div id="ad-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:2147483647;">
-    <div style="background:white; padding:24px; border-radius:16px; max-width:320px; width:100%; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
+<!-- Adsterra Ad Popup Modal -->
+<div id="ad-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:2147483647; overflow-y:auto;">
+    <div style="background:white; padding:24px; border-radius:16px; max-width:340px; width:100%; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.3); margin:auto;">
         <h3 style="margin-top:0; font-size:16px; color:#1e293b;">Sponsored Ad</h3>
-        <div style="background:#e2e8f0; height:150px; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:15px; color:#64748b; font-weight:bold;">
-            [ Ad Content / Video Playing ]
+        
+        <!-- Adsterra Container Wrapper -->
+        <div id="adsterra-container" style="min-height:250px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; margin-bottom:15px; overflow:hidden;">
+            <!-- Your Adsterra Banner Script tag will inject dynamically here -->
         </div>
-        <p id="ad-timer-text" style="font-size:12px; color:#64748b; margin-bottom:15px;">Please wait...</p>
+
+        <p id="ad-timer-text" style="font-size:12px; color:#64748b; margin-bottom:15px;">Please watch this ad...</p>
         <button id="close-ad-btn" disabled style="width:100%; background:#cbd5e1; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; font-size:13px; cursor:not-allowed;">Close Ad in 3s</button>
     </div>
 </div>
 
 <!-- Withdrawal Modal Popup -->
-<div id="withdraw-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:9998;">
-    <div style="background:white; padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:left; box-shadow:0 10px 25px rgba(0,0,0,0.15);">
+<div id="withdraw-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:9998; overflow-y:auto;">
+    <div style="background:white; padding:20px; border-radius:16px; max-width:400px; width:100%; text-align:left; box-shadow:0 10px 25px rgba(0,0,0,0.15); margin:auto;">
         <h3 style="margin-top:0; color:#1e293b; font-size:18px; text-align:center;">Request Payout</h3>
         
         <div style="margin-bottom:12px;">
@@ -276,11 +279,24 @@
         const adModal = document.getElementById('ad-modal');
         const closeBtn = document.getElementById('close-ad-btn');
         const timerText = document.getElementById('ad-timer-text');
+        const adContainer = document.getElementById('adsterra-container');
         
         if (!adModal) {
             if (onCompleteCallback) onCompleteCallback();
             return;
         }
+
+        // Dynamically insert your Adsterra banner script tag here
+        adContainer.innerHTML = '';
+        const adScript = document.createElement('script');
+        adScript.type = 'text/javascript';
+        // REPLACE THE SRC BELOW WITH YOUR ACTUAL ADSTERRA INVOCATION SCRIPT URL
+        adScript.src = 'https://pl284.../your-adsterra-script-code.js';
+        adScript.async = true;
+        adScript.onerror = function() {
+            adContainer.innerHTML = '<p style="color:#64748b; font-size:12px; padding:10px;">Advertisement</p>';
+        };
+        adContainer.appendChild(adScript);
 
         adModal.style.display = 'flex';
         let timeLeft = 3;
@@ -305,6 +321,7 @@
 
         closeBtn.onclick = function() {
             adModal.style.display = 'none';
+            adContainer.innerHTML = ''; // Clean up ad container
             if (onCompleteCallback) onCompleteCallback();
         };
     }
@@ -479,7 +496,6 @@
         instructions.innerText = "Click to earn more!";
     }
 
-    // Game 2: Number Guessing (Updated with $0.002 win and Ad on failure)
     async function submitGuess() {
         const val = parseInt(document.getElementById('guess-input').value);
         const guessStatus = document.getElementById('guess-status');
@@ -505,7 +521,6 @@
         }
     }
 
-    // Game 3: Lucky Spinner (Updated prizes, increased $0.00 frequency, lower higher tier chances, ad on $0.00)
     function startRealSpinner() {
         const spinBtn = document.getElementById('spin-btn');
         const spinStatus = document.getElementById('spin-status');
@@ -528,7 +543,6 @@
     }
 
     async function finalizeSpinResult(spinBtn, spinStatus, spinnerText) {
-        // High frequency of 0.00, sparse weights for 0.002-0.005
         const pool = [
             0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 
             0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
