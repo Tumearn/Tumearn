@@ -555,10 +555,13 @@
 
         let secret = Math.floor(Math.random() * 5) + 1;
         if (val === secret) {
-            guessStatus.innerText = `Correct! Secret was ${secret}. Crediting $0.002...`;
+            guessStatus.innerText = `Correct! Secret was ${secret}. Showing ad before crediting reward...`;
             guessStatus.style.color = "#059669";
-            await creditReward(0.002, guessStatus);
-            guessStatus.innerText = `Guessed right! +$0.002 added.`;
+            
+            showSimulatedAd(async () => {
+                await creditReward(0.002, guessStatus);
+                guessStatus.innerText = `Guessed right! +$0.002 added.`;
+            });
         } else {
             guessStatus.innerText = `Wrong! Secret was ${secret}. Showing ad...`;
             guessStatus.style.color = "#dc2626";
@@ -604,13 +607,16 @@
         spinnerText.innerText = "$" + selectedReward.toFixed(3);
 
         if (selectedReward > 0) {
-            spinStatus.innerText = `Won $${selectedReward.toFixed(3)}! Crediting balance...`;
+            spinStatus.innerText = `Won $${selectedReward.toFixed(3)}! Showing ad before crediting...`;
             spinStatus.style.color = "#059669";
-            await creditReward(selectedReward, spinStatus);
-            spinStatus.innerText = "Spin completed!";
-            spinBtn.disabled = false;
-            spinBtn.style.opacity = '1';
-            spinBtn.innerText = "Spin Again";
+            
+            showSimulatedAd(async () => {
+                await creditReward(selectedReward, spinStatus);
+                spinStatus.innerText = "Spin completed!";
+                spinBtn.disabled = false;
+                spinBtn.style.opacity = '1';
+                spinBtn.innerText = "Spin Again";
+            });
         } else {
             spinStatus.innerText = "Oops! You hit $0.00. Showing ad...";
             spinStatus.style.color = "#dc2626";
