@@ -47,7 +47,7 @@
             <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px;">
                 <h4 style="margin:0 0 8px 0; font-size:14px; color:#1e293b;">Daily Login Rewards (7-Day Streak)</h4>
                 <p style="margin:0 0 10px 0; font-size:12px; color:#64748b;">Log in daily to climb your streak. Resets after Day 7!</p>
-                <div style="display:flex; gap:6px; justify-content:space-between;" id="streak-grid">
+                <div style="display:flex; gap:4px; justify-content:space-between;" id="streak-grid">
                     <!-- Dynamic streak items inserted here -->
                 </div>
             </div>
@@ -59,49 +59,58 @@
             </div>
 
             <!-- Game Subtab Content (Multiple Mini-Games) -->
-            <div id="subtab-game" style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px;">
-                <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b; text-align:center;">Select Mini-Game</h3>
-                <p style="margin:0 0 15px 0; font-size:12px; color:#64748b; text-align:center;">Play games & earn rewards!</p>
+            <div id="subtab-game" style="margin-bottom:15px;">
+                <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px;">
+                    <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b; text-align:center;">Select Mini-Game</h3>
+                    <p style="margin:0 0 15px 0; font-size:12px; color:#64748b; text-align:center;">Play games & earn rewards!</p>
 
-                <!-- Mini-Game Selection Buttons -->
-                <div style="display:flex; gap:5px; margin-bottom:15px;">
-                    <button onclick="switchMiniGame('reaction')" id="minigame-btn-reaction" style="flex:1; background:#2563eb; color:white; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Reaction</button>
-                    <button onclick="switchMiniGame('guess')" id="minigame-btn-guess" style="flex:1; background:#f1f5f9; color:#475569; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Number Guess</button>
-                    <button onclick="switchMiniGame('spin')" id="minigame-btn-spin" style="flex:1; background:#f1f5f9; color:#475569; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Lucky Spinner</button>
-                </div>
-
-                <!-- 1. Reaction Clicker Game Container -->
-                <div id="game-reaction-pane">
-                    <div id="game-screen" style="height:130px; background:#f8fafc; border:2px dashed #cbd5e1; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; margin-bottom:15px;">
-                        <p id="game-instructions" style="margin:0; font-size:13px; color:#475569; font-weight:500;">Click Start Game to begin!</p>
-                        <button id="target-btn" onclick="hitReaction()" style="display:none; background:#ef4444; color:white; border:none; font-weight:bold; padding:10px 20px; border-radius:50px; cursor:pointer;">
-                            CLICK ME!
-                        </button>
+                    <!-- Mini-Game Selection Buttons -->
+                    <div style="display:flex; gap:5px; margin-bottom:15px;">
+                        <button onclick="switchMiniGame('reaction')" id="minigame-btn-reaction" style="flex:1; background:#2563eb; color:white; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Reaction</button>
+                        <button onclick="switchMiniGame('guess')" id="minigame-btn-guess" style="flex:1; background:#f1f5f9; color:#475569; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Number Guess</button>
+                        <button onclick="switchMiniGame('spin')" id="minigame-btn-spin" style="flex:1; background:#f1f5f9; color:#475569; border:none; padding:8px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">Lucky Spinner</button>
                     </div>
-                    <button id="start-game-btn" onclick="startReactionGame()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:13px;">Start Reaction Round</button>
-                    <p id="game-status" style="margin:10px 0 0 0; font-size:12px; color:#64748b; display:none; text-align:center;"></p>
-                </div>
 
-                <!-- 2. Number Guessing Game Container -->
-                <div id="game-guess-pane" style="display:none; text-align:center;">
-                    <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:10px; margin-bottom:15px;">
-                        <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong> (Win <strong style="color:#059669;">$0.002</strong> if correct, $0.00 if wrong):</p>
-                        <input type="number" id="guess-input" min="1" max="5" placeholder="Enter number (1-5)" style="width:140px; padding:8px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; text-align:center; margin-bottom:10px;"><br>
-                        <button onclick="submitGuess()" style="background:#10b981; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:12px;">Submit Guess</button>
-                    </div>
-                    <p id="guess-status" style="margin:0; font-size:12px; color:#64748b;"></p>
-                </div>
-
-                <!-- 3. Real Lucky Spinner Container -->
-                <div id="game-spin-pane" style="display:none; text-align:center;">
-                    <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:20px; border-radius:10px; margin-bottom:15px;">
-                        <div id="spinner-display" style="width:100px; height:100px; margin:0 auto 12px auto; background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; box-shadow:0 4px 10px rgba(139,92,246,0.3);">
-                            <span id="spinner-text">SPIN</span>
+                    <!-- 1. Reaction Clicker Game Container -->
+                    <div id="game-reaction-pane">
+                        <div id="game-screen" style="height:130px; background:#f8fafc; border:2px dashed #cbd5e1; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; margin-bottom:15px;">
+                            <p id="game-instructions" style="margin:0; font-size:13px; color:#475569; font-weight:500;">Click Start Game to begin!</p>
+                            <button id="target-btn" onclick="hitReaction()" style="display:none; background:#ef4444; color:white; border:none; font-weight:bold; padding:10px 20px; border-radius:50px; cursor:pointer;">
+                                CLICK ME!
+                            </button>
                         </div>
-                        <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Real wheel with weighted odds! Win $0.001, $0.002, $0.003, $0.004, $0.005, or $0.00.</p>
-                        <button id="spin-btn" onclick="startRealSpinner()" style="background:#8b5cf6; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Spin the Wheel</button>
+                        <button id="start-game-btn" onclick="startReactionGame()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer; font-size:13px;">Start Reaction Round</button>
+                        <p id="game-status" style="margin:10px 0 0 0; font-size:12px; color:#64748b; display:none; text-align:center;"></p>
                     </div>
-                    <p id="spin-status" style="margin:0; font-size:12px; color:#64748b;"></p>
+
+                    <!-- 2. Number Guessing Game Container -->
+                    <div id="game-guess-pane" style="display:none; text-align:center;">
+                        <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <p style="margin:0 0 10px 0; font-size:13px; color:#334155;">Guess a secret number between <strong>1 and 5</strong> (Win <strong style="color:#059669;">$0.002</strong> if correct, $0.00 if wrong):</p>
+                            <input type="number" id="guess-input" min="1" max="5" placeholder="Enter number (1-5)" style="width:140px; padding:8px; border:1px solid #cbd5e1; border-radius:8px; font-size:13px; text-align:center; margin-bottom:10px;"><br>
+                            <button onclick="submitGuess()" style="background:#10b981; color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:12px;">Submit Guess</button>
+                        </div>
+                        <p id="guess-status" style="margin:0; font-size:12px; color:#64748b;"></p>
+                    </div>
+
+                    <!-- 3. Real Lucky Spinner Container -->
+                    <div id="game-spin-pane" style="display:none; text-align:center;">
+                        <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:20px; border-radius:10px; margin-bottom:15px;">
+                            <div id="spinner-display" style="width:100px; height:100px; margin:0 auto 12px auto; background:linear-gradient(135deg, #8b5cf6, #6d28d9); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; box-shadow:0 4px 10px rgba(139,92,246,0.3);">
+                                <span id="spinner-text">SPIN</span>
+                            </div>
+                            <p style="margin:0 0 15px 0; font-size:12px; color:#64748b;">Real wheel with weighted odds! Win $0.001, $0.002, $0.003, $0.004, $0.005, or $0.00.</p>
+                            <button id="spin-btn" onclick="startRealSpinner()" style="background:#8b5cf6; color:white; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:13px;">Spin the Wheel</button>
+                        </div>
+                        <p id="spin-status" style="margin:0; font-size:12px; color:#64748b;"></p>
+                    </div>
+                </div>
+
+                <!-- High-Paying Tasks Box Added Directly Under Game Tab -->
+                <div style="background:white; border:1px solid #e2e8f0; padding:15px; border-radius:16px; margin-bottom:15px; text-align:center;">
+                    <h3 style="margin:0 0 5px 0; font-size:16px; color:#1e293b;">High-Paying Tasks</h3>
+                    <p style="margin:0 0 12px 0; font-size:12px; color:#64748b;">Complete partner task link via Smartlink</p>
+                    <button onclick="openSmartTaskLink()" style="display:block; width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; font-size:13px; cursor:pointer;">Claim Task Bonus ($0.005)</button>
                 </div>
             </div>
 
@@ -297,9 +306,9 @@
             }
 
             grid.innerHTML += `
-                <div style="flex:1; background:${bg}; border:${border}; border-radius:8px; padding:6px 2px; text-align:center;">
-                    <div style="font-size:10px; font-weight:bold; color:${color};">Day ${i}</div>
-                    <div style="font-size:11px; font-weight:bold; color:${color}; margin-top:2px;">+$${bonusAmounts[i].toFixed(2)}</div>
+                <div style="flex:1; background:${bg}; border:${border}; border-radius:6px; padding:6px 1px; text-align:center; box-sizing:border-box; overflow:hidden;">
+                    <div style="font-size:9px; font-weight:bold; color:${color}; white-space:nowrap;">Day ${i}</div>
+                    <div style="font-size:10px; font-weight:bold; color:${color}; margin-top:2px; white-space:nowrap;">+$${bonusAmounts[i].toFixed(2)}</div>
                 </div>
             `;
         }
