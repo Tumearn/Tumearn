@@ -3,11 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="kq9JA8jRCvJS-8Rdf2QyhWJshMco3bFWuHz5TSYUG7A" />
     
-    <!-- Title & Description -->
+    <!-- SEO Title & Description -->
     <title>TumEarn - Play & Earn Platform</title>
     <meta name="description" content="Welcome to TumEarn Play games, claim progressive daily streak bonuses, and cash out securely. Play games & earn rewards!">
+    
+    <!-- Google Search Verification -->
+    <meta name="google-site-verification" content="kq9JA8jRCvJS-8Rdf2QyhWJshMco3bFWuHz5TSYUG7A" />
+
+    <!-- Site Name Fix for Google Search -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "TumEarn",
+      "url": "https://tumearn.github.io/"
+    }
+    </script>
 
     <!-- Favicon Links -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -166,19 +178,32 @@
         <!-- Profile View -->
         <div id="profile-view" style="display:none; background:white; padding:20px; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <h3 style="margin-top:0; color:#1e293b; font-size:18px;">Account Profile</h3>
-            <p style="font-size:13px; color:#64748b; margin-bottom:20px;">Manage your account details and login credentials.</p>
+            <p style="font-size:13px; color:#64748b; margin-bottom:20px;">Manage your account details and legal policies.</p>
             
             <div style="margin-bottom:20px;">
                 <label style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:5px;">Email Address</label>
                 <input type="text" id="prof-email" readonly style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:8px; background:#f8fafc; font-size:13px; box-sizing:border-box;">
             </div>
 
+            <!-- Legal Links Section for Ad Networks / Offerwalls -->
+            <div style="border-top:1px solid #e2e8f0; padding-top:15px; margin-bottom:20px;">
+                <label style="font-size:12px; font-weight:bold; color:#475569; display:block; margin-bottom:10px;">Legal & Compliance</label>
+                <div style="display:flex; gap:10px;">
+                    <button onclick="openLegalModal('privacy')" style="flex:1; background:#f1f5f9; color:#334155; border:none; padding:8px; border-radius:8px; font-weight:bold; font-size:12px; cursor:pointer;">Privacy Policy</button>
+                    <button onclick="openLegalModal('terms')" style="flex:1; background:#f1f5f9; color:#334155; border:none; padding:8px; border-radius:8px; font-weight:bold; font-size:12px; cursor:pointer;">Terms & Conditions</button>
+                </div>
+            </div>
+
             <button onclick="logoutUser()" style="width:100%; background:#fee2e2; color:#dc2626; border:none; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Logout</button>
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer with Legal Links for Public View -->
     <div style="text-align:center; padding-top:20px; font-size:12px; color:#94a3b8;">
+        <div style="margin-bottom:8px;">
+            <a href="javascript:void(0)" onclick="openLegalModal('privacy')" style="color:#64748b; text-decoration:none; margin:0 8px;">Privacy Policy</a> | 
+            <a href="javascript:void(0)" onclick="openLegalModal('terms')" style="color:#64748b; text-decoration:none; margin:0 8px;">Terms & Conditions</a>
+        </div>
         &#169; 2026 Tumearn Platform. All rights reserved.
     </div>
 </div>
@@ -189,6 +214,17 @@
         <h3 id="toast-title" style="margin-top:0; font-size:18px; color:#1e293b;">Notification</h3>
         <p id="toast-message" style="font-size:14px; color:#64748b; margin-bottom:20px; line-height:1.4;">Message goes here</p>
         <button onclick="closeToast()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; font-size:14px; cursor:pointer;">Got it</button>
+    </div>
+</div>
+
+<!-- Legal Policy Modal (Privacy Policy & Terms) -->
+<div id="legal-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; padding:20px; box-sizing:border-box; z-index:2147483646; overflow-y:auto;">
+    <div style="background:white; padding:24px; border-radius:16px; max-width:450px; width:100%; text-align:left; box-shadow:0 10px 25px rgba(0,0,0,0.2); max-height:85vh; display:flex; flex-direction:column; margin:auto;">
+        <h3 id="legal-title" style="margin-top:0; font-size:18px; color:#1e293b; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">Policy Title</h3>
+        <div id="legal-content" style="font-size:12px; color:#475569; line-height:1.6; overflow-y:auto; flex:1; padding-right:5px; margin:15px 0;">
+            <!-- Policy text goes here -->
+        </div>
+        <button onclick="closeLegalModal()" style="width:100%; background:#2563eb; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold; font-size:14px; cursor:pointer;">Close</button>
     </div>
 </div>
 
@@ -298,6 +334,46 @@
     };
 
     const bonusAmounts = { 1: 0.01, 2: 0.02, 3: 0.03, 4: 0.04, 5: 0.05, 6: 0.06, 7: 0.07 };
+
+    const legalTexts = {
+        privacy: `
+            <p><strong>Effective Date:</strong> January 1, 2026</p>
+            <p>At <strong>TumEarn</strong>, accessible from https://tumearn.github.io/, we prioritize the privacy of our visitors and registered users. This Privacy Policy document outlines the types of information collected and recorded by TumEarn and how we use it.</p>
+            <p><strong>1. Information We Collect:</strong><br>When you log in via Google Authentication, we collect your email address and basic profile details necessary for account management. We also track gameplay activity, streak bonuses, referral records, and wallet balances stored securely via Firebase.</p>
+            <p><strong>2. Use of Cookies and Web Beacons:</strong><br>TumEarn uses cookies and advertising networks (such as Adsterra) to serve ads based on users' visits to our site and other websites on the internet. Users may opt out of personalized advertising by visiting external ad network settings.</p>
+            <p><strong>3. Third-Party Partners & Offerwalls:</strong><br>Our platform integrates third-party ad networks, tracking pixels, and offerwalls to deliver rewards and sponsored content. These third parties may collect anonymous or pseudonymous identifiers to verify task completions.</p>
+            <p><strong>4. Data Security:</strong><br>We implement industry-standard security protocols through Google Firebase to protect user data against unauthorized access, alteration, disclosure, or destruction.</p>
+            <p><strong>5. Consent:</strong><br>By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
+        `,
+        terms: `
+            <p><strong>Effective Date:</strong> January 1, 2026</p>
+            <p>Welcome to <strong>TumEarn</strong>! These Terms and Conditions govern your use of our website located at https://tumearn.github.io/ and all associated rewards, mini-games, referral programs, and tasks.</p>
+            <p><strong>1. Acceptance of Terms:</strong><br>By accessing or using TumEarn, you agree to be bound by these Terms. If you disagree with any part of these terms, you may not access the platform.</p>
+            <p><strong>2. User Accounts & Eligibility:</strong><br>You must authenticate securely using a valid Google account. Users are restricted to one account per individual. Creating multiple accounts or using automated bots/scripts to farm rewards or manipulate offerwalls will result in immediate account termination and forfeiture of balances.</p>
+            <p><strong>3. Earning Rewards & Payouts:</strong><br>Rewards can be earned through mini-games, daily streaks, task completions, and referrals. Payout requests are processed subject to minimum withdrawal limits, verification checks, and applicable gateway/website fees.</p>
+            <p><strong>4. Advertisements & External Links:</strong><br>TumEarn displays third-party advertisements and promotional task links. We are not responsible for the content, privacy policies, or practices of any third-party websites or external offerwalls.</p>
+            <p><strong>5. Modifications:</strong><br>We reserve the right to modify or replace these Terms at any time at our sole discretion. Continued use of the platform following any modifications constitutes acceptance of those changes.</p>
+        `
+    };
+
+    function openLegalModal(type) {
+        const modal = document.getElementById('legal-modal');
+        const title = document.getElementById('legal-title');
+        const content = document.getElementById('legal-content');
+
+        if (type === 'privacy') {
+            title.innerText = 'Privacy Policy';
+            content.innerHTML = legalTexts.privacy;
+        } else {
+            title.innerText = 'Terms & Conditions';
+            content.innerHTML = legalTexts.terms;
+        }
+        modal.style.display = 'flex';
+    }
+
+    function closeLegalModal() {
+        document.getElementById('legal-modal').style.display = 'none';
+    }
 
     function renderStreakUI(currentStreak, claimedToday) {
         const grid = document.getElementById('streak-grid');
@@ -780,46 +856,7 @@
         }
 
         let spec = methodSpecs[method];
-        if (amount < spec.min) {
-            showToast("Minimum Limit", `Minimum withdrawal amount for ${method} is $${spec.min.toFixed(2)}.`);
-            return;
-        }
-        if (amount > currentBalance) {
-            showToast("Insufficient Balance", "You cannot withdraw more than your current balance.");
-            return;
-        }
-
-        let methodFee = spec.methodFeePct > 0 ? (amount * spec.methodFeePct) : spec.methodFeeFlat;
-        let websiteFee = amount * 0.05;
-        let netPayout = amount - methodFee - websiteFee;
-        let totalDeduction = amount;
-
-        try {
-            await db.collection("withdrawals").add({
-                userId: activeUser.uid,
-                email: activeUser.email,
-                method: method,
-                details: details,
-                requestedAmount: amount,
-                methodFee: methodFee,
-                websiteFee: websiteFee,
-                netPayout: netPayout,
-                status: "Pending",
-                timestamp: new Date()
-            });
-
-            await db.collection("users").doc(activeUser.uid).update({
-                balance: firebase.firestore.FieldValue.increment(-totalDeduction)
-            });
-
-            const updatedSnap = await db.collection("users").doc(activeUser.uid).get();
-            document.getElementById('display-balance').innerText = updatedSnap.data().balance.toFixed(3);
-
-            closeWithdrawModal();
-            showToast("Request Submitted", `Withdrawal via ${method} submitted successfully! Net payout: $${netPayout.toFixed(2)}. Processing takes 1-3 business days.`);
-        } catch (e) {
-            showToast("Error", "Error submitting withdrawal request.");
-        }
+        (amount < spec.min) ? showToast("Minimum Limit", `Minimum withdrawal amount for ${method} is $${spec.min.toFixed(2)}.`) : null;
     }
 </script>
 </body>
